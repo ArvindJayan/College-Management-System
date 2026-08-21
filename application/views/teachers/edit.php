@@ -11,7 +11,7 @@
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="<?= site_url('dashboard'); ?>">
                 <i class="bi bi-building fs-3 me-2"></i>
@@ -34,13 +34,13 @@
                             </span>
 
 
-                            <span class="badge bg-light text-primary fw-semibold" style="font-size: 0.75rem;">
+                            <span class="badge bg-light text-success fw-semibold" style="font-size: 0.75rem;">
                                 <?= html_escape(
                                     $this->session->userdata('role_name') ?? 'User'
                                 ); ?>
                             </span>
 
-                            <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center shadow-sm ms-1"
+                            <div class="rounded-circle bg-white text-success d-flex align-items-center justify-content-center shadow-sm ms-1"
                                 style="width: 38px; height: 38px; flex-shrink: 0;">
                                 <i class="bi bi-person-fill fs-5"></i>
                             </div>
@@ -50,7 +50,7 @@
                             <li>
                                 <a class="dropdown-item py-2 d-flex align-items-center"
                                     href="<?= site_url('profile'); ?>">
-                                    <i class="bi bi-person-gear text-primary me-2 fs-5"></i>
+                                    <i class="bi bi-person-gear text-success me-2 fs-5"></i>
                                     My Profile
                                 </a>
                             </li>
@@ -60,7 +60,7 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item py-2 d-flex align-items-center text-primary fw-semibold"
+                                <a class="dropdown-item py-2 d-flex align-items-center text-success fw-semibold"
                                     href="<?= site_url('auth/logout'); ?>">
                                     <i class="bi bi-box-arrow-right me-2 fs-5"></i>
                                     Logout
@@ -79,12 +79,12 @@
             <div class="col-lg-7 col-md-9">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h4 class="fw-bold text-dark mb-0">
-                        <i class="bi bi-pencil-square text-primary me-2">
+                        <i class="bi bi-pencil-square text-success me-2">
                         </i>
                         Edit Teacher Record
                     </h4>
 
-                    <a href="<?= site_url('teachers'); ?>" class="btn btn-outline-primary fw-semibold">
+                    <a href="<?= site_url('teachers'); ?>" class="btn btn-outline-success fw-semibold">
                         <i class="bi bi-arrow-left me-1"></i>
                         Back to Directory
                     </a>
@@ -92,7 +92,7 @@
 
 
                 <div class="card border-0 shadow-sm rounded-3">
-                    <div class="card-header bg-primary text-white py-3">
+                    <div class="card-header bg-success text-white py-3">
 
                         <h5 class="mb-0 fw-bold">
                             <?= html_escape(
@@ -142,7 +142,7 @@
 
                                 </label>
 
-                                <input type="text" name="name" class="form-control focus-ring focus-ring-primary" value="<?= set_value(
+                                <input type="text" name="name" class="form-control focus-ring focus-ring-success" value="<?= set_value(
                                     'name',
                                     $teacher->name
                                 ); ?>" maxlength="50" required>
@@ -167,7 +167,7 @@
                                     </label>
 
                                     <input type="text" name="first_name"
-                                        class="form-control focus-ring focus-ring-primary" value="<?= set_value(
+                                        class="form-control focus-ring focus-ring-success" value="<?= set_value(
                                             'first_name',
                                             $teacher->first_name
                                         ); ?>" maxlength="50" required>
@@ -184,7 +184,7 @@
                                     </label>
 
                                     <input type="text" name="last_name"
-                                        class="form-control focus-ring focus-ring-primary" value="<?= set_value(
+                                        class="form-control focus-ring focus-ring-success" value="<?= set_value(
                                             'last_name',
                                             $teacher->last_name
                                         ); ?>" maxlength="50">
@@ -202,7 +202,7 @@
                                 </label>
 
 
-                                <select name="department_id" class="form-select focus-ring focus-ring-primary" required>
+                                <select name="department_id" class="form-select focus-ring focus-ring-success" required>
 
                                     <option value="">
                                         Select Department
@@ -292,7 +292,7 @@
 
                                 </label>
 
-                                <input type="text" name="phone" class="form-control focus-ring focus-ring-primary"
+                                <input type="text" name="phone" class="form-control focus-ring focus-ring-success"
                                     value="<?= set_value(
                                         'phone',
                                         $teacher->phone
@@ -309,7 +309,7 @@
                                 </label>
 
                                 <input type="date" name="joining_date"
-                                    class="form-control focus-ring focus-ring-primary" value="<?= set_value(
+                                    class="form-control focus-ring focus-ring-success" value="<?= set_value(
                                         'joining_date',
                                         $teacher->joining_date
                                     ); ?>" required>
@@ -318,14 +318,14 @@
 
                             <div class="d-flex justify-content-end gap-2 pt-2">
 
-                                <a href="<?= site_url('teachers'); ?>" class="btn btn-outline-primary fw-semibold">
+                                <a href="<?= site_url('teachers'); ?>" class="btn btn-outline-success fw-semibold">
 
                                     Cancel
 
                                 </a>
 
 
-                                <button type="submit" class="btn btn-primary fw-semibold">
+                                <button type="submit" class="btn btn-success fw-semibold">
 
                                     <i class="bi bi-check-lg me-1">
                                     </i>

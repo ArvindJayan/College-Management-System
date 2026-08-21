@@ -1,87 +1,83 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Course_model extends CI_Model {
+class Course_model extends CI_Model
+{
+    protected $table = 'courses';
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
-        $this->load->database();
     }
 
-    public function create_course($data) {
-        return $this->db->insert('courses', $data);
+    public function get_all_courses()
+    {
+        return $this->db
+            ->select('courses.*, departments.name AS department_name, departments.code AS department_code')
+            ->from('courses')
+            ->join(
+                'departments',
+                'departments.id = courses.department_id',
+                'left'
+            )
+            ->order_by('courses.name', 'ASC')
+            ->get()
+            ->result();
     }
 
-    public function get_course_by_id($id) {
-        $this->db->select('
-            courses.*,
-            departments.name as department_name,
-            departments.code as department_code
-        ');
-        $this->db->from('courses');
-        $this->db->join(
-            'departments',
-            'departments.id = courses.department_id'
-        );
-        $this->db->where('courses.id', $id);
-
-        return $this->db->get()->row();
+    public function get_course($id)
+    {
+        return $this->db
+            ->select('courses.*, departments.name AS department_name, departments.code AS department_code')
+            ->from('courses')
+            ->join(
+                'departments',
+                'departments.id = courses.department_id',
+                'left'
+            )
+            ->where('courses.id', $id)
+            ->get()
+            ->row();
     }
 
-    public function get_all_courses($search = NULL, $department_id = NULL) {
+    public function create_course($data)
+    {
+        return $this->db->insert($this->table, $data);
+    }
 
-        $this->db->select('
-            courses.*,
-            departments.name as department_name,
-            departments.code as department_code
-        ');
+    public function update_course($id, $data)
+    {
+        return $this->db
+            ->where('id', $id)
+            ->update($this->table, $data);
+    }
 
-        $this->db->from('courses');
+    public function delete_course($id)
+    {
+        return $this->db
+            ->where('id', $id)
+            ->delete($this->table);
+    }
 
-        $this->db->join(
-            'departments',
-            'departments.id = courses.department_id'
-        );
+    public function name_exists($name, $exclude_id = NULL)
+    {
+        $this->db->where('name', $name);
 
-        if (!empty($search)) {
-
-            $this->db->group_start();
-
-            $this->db->like('courses.name', $search);
-            $this->db->or_like('courses.code', $search);
-            $this->db->or_like('departments.name', $search);
-            $this->db->or_like('departments.code', $search);
-
-            $this->db->group_end();
+        if ($exclude_id !== NULL) {
+            $this->db->where('id !=', $exclude_id);
         }
 
-        if (!empty($department_id)) {
-            $this->db->where(
-                'courses.department_id',
-                $department_id
-            );
+        return $this->db->count_all_results($this->table) > 0;
+    }
+
+    public function code_exists($code, $exclude_id = NULL)
+    {
+        $this->db->where('code', $code);
+
+        if ($exclude_id !== NULL) {
+            $this->db->where('id !=', $exclude_id);
         }
 
-        $this->db->order_by('courses.name', 'ASC');
-
-        return $this->db->get()->result();
-    }
-
-    public function get_course_count() {
-        return $this->db->count_all('courses');
-    }
-
-    public function update_course($id, $data) {
-
-        $this->db->where('id', $id);
-
-        return $this->db->update('courses', $data);
-    }
-
-    public function delete_course($id) {
-
-        $this->db->where('id', $id);
-
-        return $this->db->delete('courses');
+        return $this->db->count_all_results($this->table) > 0;
     }
 }

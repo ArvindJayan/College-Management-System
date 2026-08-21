@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class teacher_model extends CI_Model {
+class Teacher_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();
@@ -9,7 +9,8 @@ class teacher_model extends CI_Model {
     }
 
     public function profile_exists($user_id) {
-        return $this->db->where('user_id', $user_id)->count_all_results('teachers') > 0;
+        return $this->db->where('user_id', $user_id)
+                        ->count_all_results('teachers') > 0;
     }
 
     public function create_teacher($data) {
@@ -17,44 +18,76 @@ class teacher_model extends CI_Model {
     }
 
     public function get_teacher_by_id($id) {
-        $this->db->select('teachers.*, users.name, users.email');
+        $this->db->select('
+            teachers.*,
+            users.name,
+            users.email,
+            departments.name as department_name,
+            departments.code as department_code
+        ');
         $this->db->from('teachers');
         $this->db->join('users', 'users.id = teachers.user_id');
+        $this->db->join('departments', 'departments.id = teachers.department_id');
         $this->db->where('teachers.id', $id);
+
         return $this->db->get()->row();
     }
 
-    public function get_all_teachers($search = NULL, $specialty = NULL) {
-        $this->db->select('teachers.*, users.name, users.email');
+    public function get_teacher_by_user_id($user_id) {
+        $this->db->select('
+            teachers.*,
+            users.name,
+            users.email,
+            departments.name as department_name,
+            departments.code as department_code
+        ');
         $this->db->from('teachers');
         $this->db->join('users', 'users.id = teachers.user_id');
+        $this->db->join('departments', 'departments.id = teachers.department_id');
+        $this->db->where('teachers.user_id', $user_id);
+
+        return $this->db->get()->row();
+    }
+
+    public function get_all_teachers($search = NULL, $department_id = NULL) {
+        $this->db->select('
+            teachers.*,
+            users.name,
+            users.email,
+            departments.name as department_name,
+            departments.code as department_code
+        ');
+        $this->db->from('teachers');
+        $this->db->join('users', 'users.id = teachers.user_id');
+        $this->db->join('departments', 'departments.id = teachers.department_id');
 
         if (!empty($search)) {
             $this->db->group_start();
             $this->db->like('users.name', $search);
             $this->db->or_like('users.email', $search);
-            $this->db->or_like('teachers.specialization', $search);
+            $this->db->or_like('teachers.employee_code', $search);
+            $this->db->or_like('teachers.first_name', $search);
+            $this->db->or_like('teachers.last_name', $search);
+            $this->db->or_like('teachers.phone', $search);
+            $this->db->or_like('departments.name', $search);
             $this->db->group_end();
         }
 
-        if (!empty($specialty)) {
-            $this->db->where('teachers.specialization', $specialty);
+        if (!empty($department_id)) {
+            $this->db->where('teachers.department_id', $department_id);
         }
 
         $this->db->order_by('users.name', 'ASC');
+
         return $this->db->get()->result();
     }
 
-    public function get_specializations() {
-        $this->db->select('specialization');
-        $this->db->distinct();
-        $this->db->from('teachers');
-        $this->db->where('specialization IS NOT NULL');
-        $this->db->where('specialization !=', '');
-        $this->db->order_by('specialization', 'ASC');
-        $query = $this->db->get();
-        
-        return array_column($query->result_array(), 'specialization');
+    public function get_departments() {
+        $this->db->select('id, name, code');
+        $this->db->from('departments');
+        $this->db->order_by('name', 'ASC');
+
+        return $this->db->get()->result();
     }
 
     public function get_teacher_count() {
@@ -69,6 +102,7 @@ class teacher_model extends CI_Model {
 
         if (!empty($user_data)) {
             $teacher = $this->get_teacher_by_id($id);
+
             if ($teacher) {
                 $this->db->where('id', $teacher->user_id);
                 $this->db->update('users', $user_data);
@@ -76,6 +110,7 @@ class teacher_model extends CI_Model {
         }
 
         $this->db->trans_complete();
+
         return $this->db->trans_status();
     }
 }

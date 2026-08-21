@@ -63,4 +63,36 @@ class Auth extends CI_Controller {
             }     
         }
     }
+
+    public function login($email, $password) {
+        if ($this->session->userdata('is_authenticated')) {
+            $this->_redirect_authenticated_user();
+            return;
+        }
+
+        if ( ! $this->input->post()) {
+            $this->load->view('auth/login');
+            return;
+        }
+        $email    = $this->input->post('email', TRUE);
+        $password = $this->input->post('password', TRUE);
+        $user     = $this->User_model->login($email, $password);
+
+        if ($user) {
+            $session_data = array(
+                'user_id'          => $user->id,
+                'name'             => $user->name,
+                'email'            => $user->email,
+                'role_id'          => $user->role_id,
+                'role_name'        => $user->role_name,
+                'is_authenticated' => TRUE
+            );
+            $this->session->set_userdata($session_data);
+
+            $this->_redirect_authenticated_user();
+        } else {
+            $this->session->set_flashdata('error', 'Invalid username or password.');
+            redirect('auth/login');
+        }
+    }
 }

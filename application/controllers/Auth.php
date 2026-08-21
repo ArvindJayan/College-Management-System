@@ -22,7 +22,7 @@ class Auth extends CI_Controller {
         $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|matches[password]');
 
         if ($this->form_validation->run() == FALSE) {
-            $data['roles'] = $this->User_model->get_roles();
+            $data['roles'] = $this->User_model->get_non_admin_roles();
             $this->load->view('auth/register', $data);
         } else {
             $selected_role_id = (int)$this->input->post('role_id', TRUE);

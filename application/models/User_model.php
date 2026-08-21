@@ -14,5 +14,18 @@ class User_model extends CI_Model {
         }
         return FALSE;
     }
+
+    public function login($email, $password) {
+        $this->db->select('users.*, roles.name as role_name');
+        $this->db->from('users');
+        $this->db->join('roles', 'roles.id = user.role_id');
+        $this->db->where('users.email', $email);
+        $query = $this->db->get();
+
+        if(password_verify($password, $user->password)) {
+            return $user;
+        }
+        return FALSE;
+    }
 }
 ?>

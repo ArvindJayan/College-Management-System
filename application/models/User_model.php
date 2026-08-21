@@ -35,5 +35,11 @@ class User_model extends CI_Model {
         $this->db->where('users.id', $id);
         return $this->db->get()->row();
     }
+
+    public function get_non_admin_roles() {
+        $this->db->where('name !=', 'Principal');
+        $this->db->where('id !=', 1);
+        return $this->db->get('roles')->result();
+    }
 }
 ?>

@@ -116,7 +116,7 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th class="ps-4">student Name</th>
+                                <th class="ps-4">Student Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Gender</th>

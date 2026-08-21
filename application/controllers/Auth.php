@@ -15,11 +15,11 @@ class Auth extends CI_Controller {
             return;
         }
 
-        $this->form_validation->set_rules('name', 'Full Name'. 'required|trim');
-        $this->form_validation->set_rules('email', 'Email Address'. 'required|trim|valid_email|is_unique[users.email]');
-        $this->form_validation->set_rules('role_id', 'Role'. 'required|numeric');
-        $this->form_validation->set_rules('password', 'Password'. 'required|min_length[6]');
-        $this->form_validation->set_rules('confirm_password', 'Confirm Password'. 'required|matches[password]');
+        $this->form_validation->set_rules('name', 'Full Name', 'required|trim');
+        $this->form_validation->set_rules('email', 'Email Address', 'required|trim|valid_email|is_unique[users.email]');
+        $this->form_validation->set_rules('role_id', 'Role', 'required|numeric');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
+        $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|matches[password]');
 
         if ($this->form_validation->run() == FALSE) {
             $data['roles'] = $this->User_model->get_roles();

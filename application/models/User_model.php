@@ -27,5 +27,13 @@ class User_model extends CI_Model {
         }
         return FALSE;
     }
+
+    public function get_user_by_id($id) {
+        $this->db->select('users.*, roles.name as role_name');
+        $this->db->from('users');
+        $this->db->join('roles', 'roles.id = users.role_id');
+        $this->db->where('users.id', $id);
+        return $this->db->get()->row();
+    }
 }
 ?>

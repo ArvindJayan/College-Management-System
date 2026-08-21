@@ -35,10 +35,10 @@
 
                     <form action="<?= site_url('/auth/register'); ?>" method="POST">
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Full Name</label>
+                            <label class="form-label text-secondary fw-semibold">Username</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                <input type="text" name="name" class="form-control focus-ring focus-ring-success" value="<?= set_value('name'); ?>" placeholder="Enter your name" required>
+                                <input type="text" name="username" class="form-control focus-ring focus-ring-success" value="<?= set_value('name'); ?>" placeholder="Enter your username" required>
                             </div>
                         </div>
 

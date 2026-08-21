@@ -15,7 +15,7 @@ class Auth extends CI_Controller {
             return;
         }
 
-        $this->form_validation->set_rules('name', 'Full Name', 'required|trim');
+        $this->form_validation->set_rules('username', 'Username', 'required|trim');
         $this->form_validation->set_rules('email', 'Email Address', 'required|trim|valid_email|is_unique[users.email]');
         $this->form_validation->set_rules('role_id', 'Role', 'required|numeric');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
@@ -34,7 +34,7 @@ class Auth extends CI_Controller {
             }
 
             $user_data = array(
-                'name' => $this->input->post('name', TRUE),
+                'username' => $this->input->post('username', TRUE),
                 'email' => $this->input->post('email', TRUE),
                 'role_id' => $selected_role_id,
                 'password' => $this->input->post('password', TRUE),
@@ -47,7 +47,7 @@ class Auth extends CI_Controller {
                 
                 $session_data = array(
                     'user_id'          => $registered_user->id,
-                    'name'             => $registered_user->name,
+                    'username'             => $registered_user->username,
                     'email'            => $registered_user->email,
                     'role_id'          => $registered_user->role_id,
                     'is_authenticated' => TRUE
@@ -64,7 +64,7 @@ class Auth extends CI_Controller {
         }
     }
 
-    public function login($email, $password) {
+    public function login() {
         if ($this->session->userdata('is_authenticated')) {
             $this->_redirect_authenticated_user();
             return;
@@ -81,7 +81,7 @@ class Auth extends CI_Controller {
         if ($user) {
             $session_data = array(
                 'user_id'          => $user->id,
-                'name'             => $user->name,
+                'username'             => $user->username,
                 'email'            => $user->email,
                 'role_id'          => $user->role_id,
                 'role_name'        => $user->role_name,

@@ -94,7 +94,7 @@
 
         <div class="row g-4">
 
-                <?php if ($role_id === 1 || $role_id == 2): ?>
+            <?php if ($role_id === 1 || $role_id == 2): ?>
                 <div class="col-md-4">
                     <div class="card h-100 shadow action-card p-2">
                         <div class="card-body text-center p-4">
@@ -111,9 +111,9 @@
                         </div>
                     </div>
                 </div>
-                <?php endif; ?>
+            <?php endif; ?>
 
-                <?php if ($role_id != 4): ?>
+            <?php if ($role_id != 4): ?>
                 <div class="col-md-4">
                     <div class="card h-100 shadow action-card p-2">
                         <div class="card-body text-center p-4">
@@ -130,13 +130,13 @@
                         </div>
                     </div>
                 </div>
-                <?php endif; ?>
+            <?php endif; ?>
 
             <div class="col-md-4">
                 <div class="card h-100 shadow action-card p-2">
                     <div class="card-body text-center p-4">
                         <div class="rounded-circle bg-red-subtle text-success d-inline-flex p-3 mb-3">
-                            <i class="bi bi-book fs-1"></i>
+                            <i class="bi bi-journal fs-1"></i>
                         </div>
                         <h5 class="fw-bold">
                             <?php
@@ -156,8 +156,7 @@
                             }
                             ?>
                         </p>
-                        <a href="<?= site_url('/courses'); ?>"
-                            class="btn btn-outline-success w-100 mt-2 fw-semibold">
+                        <a href="<?= site_url('/courses'); ?>" class="btn btn-success w-100 mt-2 fw-semibold">
                             <i class="bi bi-book me-1"></i>
                             <?= ($role_id === 4) ? 'View Courses' : 'Manage Courses'; ?>
                         </a>
@@ -165,9 +164,30 @@
                 </div>
             </div>
 
-        </div>
-    </div>
+            <?php if ($role_id === 4): ?>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow action-card p-2">
+                        <div class="card-body text-center p-4">
+                            <div class="rounded-circle bg-red-subtle text-success d-inline-flex p-3 mb-3">
+                                <i class="bi bi-book fs-1"></i>
+                            </div>
+                            <h5 class="fw-bold">
+                                List of Subjects
+                            </h5>
+                            <p class="text-muted small">
+                                View subjects that you have enrolled for
+                            </p>
+                            <a href="<?= site_url('/subjects'); ?>" class="btn btn-outline-success w-100 mt-2 fw-semibold">
+                                <i class="bi bi-book me-1"></i>
+                                View Subjects
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+        </div>
+    <?php endif; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

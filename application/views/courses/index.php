@@ -175,12 +175,15 @@
                 </a>
 
 
+                <?php $role_id = (int) $this->session->userdata('role_id'); ?>
+                <?php if ($role_id == 1): ?>
                 <a
                     href="<?= site_url('courses/create'); ?>"
                     class="btn btn-success fw-semibold">
                     Add Course
 
                 </a>
+                <?php endif; ?>
 
             </div>
 
@@ -243,69 +246,42 @@
 
                             <tr>
 
-                                <th class="ps-4">
-
-                                    #
-
-                                </th>
-
-
-                                <th>
-
+                                <th class='px-3'>
                                     Course
-
                                 </th>
 
 
                                 <th>
-
                                     Code
-
                                 </th>
 
 
                                 <th>
-
                                     Department
-
                                 </th>
 
 
                                 <th>
-
                                     Duration
-
                                 </th>
 
-
+                            <?php if ( $role_id == 1): ?>
                                 <th class="text-end pe-4">
-
                                     Actions
-
                                 </th>
 
                             </tr>
-
+                            <?php endif; ?>
                         </thead>
 
 
                         <tbody>
-
                             <?php if (!empty($courses)): ?>
-
                                 <?php foreach ($courses as $course): ?>
 
                                     <tr>
 
-                                        <td class="ps-4">
-
-                                            <?= html_escape(
-                                                $course->id
-                                            ); ?>
-
-                                        </td>
-
-                                        <td class="fw-semibold">
+                                        <td class="fw-semibold px-3">
 
                                             <?= html_escape(
                                                 $course->name
@@ -362,7 +338,7 @@
 
                                         </td>
 
-
+                                        <?php if ( $role_id == 1): ?>
                                         <td class="text-end pe-4">
 
 
@@ -394,7 +370,7 @@
                                             </a>
 
                                         </td>
-
+                                        <?php endif; ?>
                                     </tr>
 
                                 <?php endforeach; ?>

@@ -15,7 +15,7 @@ class Auth extends CI_Controller {
             return;
         }
 
-        $this->form_validation->set_rules('username', 'Username', 'required|trim');
+        $this->form_validation->set_rules('name', 'name', 'required|trim');
         $this->form_validation->set_rules('email', 'Email Address', 'required|trim|valid_email|is_unique[users.email]');
         $this->form_validation->set_rules('role_id', 'Role', 'required|numeric');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
@@ -34,7 +34,7 @@ class Auth extends CI_Controller {
             }
 
             $user_data = array(
-                'username' => $this->input->post('username', TRUE),
+                'name' => $this->input->post('name', TRUE),
                 'email' => $this->input->post('email', TRUE),
                 'role_id' => $selected_role_id,
                 'password' => $this->input->post('password', TRUE),
@@ -47,16 +47,17 @@ class Auth extends CI_Controller {
                 
                 $session_data = array(
                     'user_id'          => $registered_user->id,
-                    'username'             => $registered_user->username,
+                    'name'             => $registered_user->name,
                     'email'            => $registered_user->email,
                     'role_id'          => $registered_user->role_id,
+                    'role_name'        => $registered_user->role_name,
                     'is_authenticated' => TRUE
                 );
 
                 $this->session->set_userdata($session_data);
 
                 $this->session->set_flashdata('success', 'Account created successfully');
-                redirect('onboarding');
+                redirect('dashboard');
             } else {
                 $this->session->set_flashdata('error', 'Something went wrong. Please try again');
                 redirect('auth/register');
@@ -66,7 +67,7 @@ class Auth extends CI_Controller {
 
     public function login() {
         if ($this->session->userdata('is_authenticated')) {
-            $this->_redirect_authenticated_user();
+            redirect('dashboard');
             return;
         }
 
@@ -81,7 +82,7 @@ class Auth extends CI_Controller {
         if ($user) {
             $session_data = array(
                 'user_id'          => $user->id,
-                'username'             => $user->username,
+                'name'             => $user->name,
                 'email'            => $user->email,
                 'role_id'          => $user->role_id,
                 'role_name'        => $user->role_name,
@@ -89,10 +90,15 @@ class Auth extends CI_Controller {
             );
             $this->session->set_userdata($session_data);
 
-            $this->_redirect_authenticated_user();
+            redirect('dashboard');
         } else {
-            $this->session->set_flashdata('error', 'Invalid username or password.');
+            $this->session->set_flashdata('error', 'Invalid email or password.');
             redirect('auth/login');
         }
+    }
+
+    public function logout() {
+        $this->session->sess_destroy();
+        redirect('/');
     }
 }

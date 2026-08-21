@@ -14,7 +14,7 @@
         <div class="col-md-5 col-lg-4">
             <div class="card shadow-lg border-0 rounded-4">
                 <div class="card-header bg-success text-white text-center py-3">
-                    <h4 class="mb-0 fw-bold"><i class="bi bi-hospital me-2"></i>HMS Portal</h4>
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-book-half me-2"></i>CMS Portal</h4>
                     <small>Sign in to your account</small>
                 </div>
                 <div class="card-body p-4">

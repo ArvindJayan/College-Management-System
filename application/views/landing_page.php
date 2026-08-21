@@ -9,7 +9,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 	<style>
 		.hero-section {
-			background: linear-gradient(135deg, #198754 0%, #7af88f 100%);
+			background: linear-gradient(135deg, #346314 0%, #b0e083 100%);
 			color: white;
 			padding: 100px 0;
 		}
@@ -34,7 +34,7 @@
 	<nav class="navbar navbar-expand-lg navbar-light bg-white shadow sticky-top">
 		<div class="container">
 			<a class="navbar-brand d-flex align-items-center fw-bold text-success" href="<?= base_url(); ?>">
-				<i class="bi bi-book fs-2 me-2"></i> College Management System
+				<i class="bi bi-book-half fs-2 me-2"></i> College Management System
 			</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 				<span class="navbar-toggler-icon"></span>

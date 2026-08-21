@@ -14,7 +14,7 @@
         <div class="col-md-6 col-lg-5">
             <div class="card shadow-lg border-0 rounded-4">
                 <div class="card-header bg-success text-white text-center py-3">
-                    <h4 class="mb-0 fw-bold"><i class="bi bi-hospital me-2"></i>CMS Portal</h4>
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-book-half me-2"></i>CMS Portal</h4>
                     <small>Create a new account</small>
                 </div>
                 <div class="card-body p-4">
@@ -35,10 +35,10 @@
 
                     <form action="<?= site_url('/auth/register'); ?>" method="POST">
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Username</label>
+                            <label class="form-label text-secondary fw-semibold">Full Name</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                <input type="text" name="username" class="form-control focus-ring focus-ring-success" value="<?= set_value('name'); ?>" placeholder="Enter your username" required>
+                                <input type="text" name="name" class="form-control focus-ring focus-ring-success" value="<?= set_value('name'); ?>" placeholder="Enter your full name" required>
                             </div>
                         </div>
 

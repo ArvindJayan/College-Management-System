@@ -22,6 +22,7 @@ class Teacher_model extends CI_Model {
             teachers.*,
             users.name,
             users.email,
+            users.status,
             departments.name as department_name,
             departments.code as department_code
         ');
@@ -38,6 +39,7 @@ class Teacher_model extends CI_Model {
             teachers.*,
             users.name,
             users.email,
+            users.status,
             departments.name as department_name,
             departments.code as department_code
         ');
@@ -54,6 +56,7 @@ class Teacher_model extends CI_Model {
             teachers.*,
             users.name,
             users.email,
+            users.status,
             departments.name as department_name,
             departments.code as department_code
         ');
@@ -94,20 +97,111 @@ class Teacher_model extends CI_Model {
         return $this->db->count_all('teachers');
     }
 
-    public function update_teacher($id, $teacher_data, $user_data = []) {
+    public function update_teacher(
+        $id,
+        $teacher_data,
+        $user_data = [],
+        $actor_user_id
+    ) {
+        $teacher = $this->get_teacher_by_id($id);
+
+        if (!$teacher) {
+            return FALSE;
+        }
+
+        $this->load->model('Audit_model');
+
         $this->db->trans_start();
 
-        $this->db->where('id', $id);
-        $this->db->update('teachers', $teacher_data);
+        $this->db
+            ->where('id', $id)
+            ->update('teachers', $teacher_data);
 
         if (!empty($user_data)) {
-            $teacher = $this->get_teacher_by_id($id);
-
-            if ($teacher) {
-                $this->db->where('id', $teacher->user_id);
-                $this->db->update('users', $user_data);
-            }
+            $this->db
+                ->where('id', $teacher->user_id)
+                ->update('users', $user_data);
         }
+
+        $old_values = array_merge(
+            [
+                'name' => $teacher->name
+            ],
+            [
+                'employee_code' => $teacher->employee_code,
+                'department_id' => $teacher->department_id,
+                'first_name'    => $teacher->first_name,
+                'last_name'     => $teacher->last_name,
+                'phone'         => $teacher->phone,
+                'joining_date'  => $teacher->joining_date
+            ]
+        );
+
+        $new_values = array_merge(
+            $user_data,
+            $teacher_data
+        );
+
+        $this->Audit_model->log(
+            $actor_user_id,
+            'UPDATE_TEACHER',
+            'teachers',
+            $id,
+            $old_values,
+            $new_values,
+            'Teacher profile updated'
+        );
+
+        $this->db->trans_complete();
+
+        return $this->db->trans_status();
+    }
+
+    public function change_status(
+        $id,
+        $status,
+        $actor_user_id
+    ) {
+        $teacher = $this->get_teacher_by_id($id);
+
+        if (!$teacher) {
+            return FALSE;
+        }
+
+        if (!in_array($status, ['active', 'inactive'], TRUE)) {
+            return FALSE;
+        }
+
+        if ($teacher->status === $status) {
+            return TRUE;
+        }
+
+        $this->load->model('Audit_model');
+
+        $this->db->trans_start();
+
+        $this->db
+            ->where('id', $teacher->user_id)
+            ->update('users', [
+                'status' => $status
+            ]);
+
+        $this->Audit_model->log(
+            $actor_user_id,
+            'CHANGE_STATUS',
+            'teachers',
+            $id,
+            [
+                'status' => $teacher->status
+            ],
+            [
+                'status' => $status
+            ],
+            'Teacher account status changed from '
+            . $teacher->status
+            . ' to '
+            . $status
+        );
 
         $this->db->trans_complete();
 

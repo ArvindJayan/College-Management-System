@@ -230,6 +230,7 @@
                                 <th>Course</th>
                                 <th>Phone</th>
                                 <th>Gender</th>
+                                <th>Status</th>
                                 <th class="text-end pe-4">Actions</th>
 
                             </tr>
@@ -288,6 +289,22 @@
 
                                             </span>
 
+                                        </td>
+
+                                        <td>
+                                            <?php if ($student->status === 'active'): ?>
+
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                                    Active
+                                                </span>
+
+                                            <?php else: ?>
+
+                                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                                                    Inactive
+                                                </span>
+
+                                            <?php endif; ?>
                                         </td>
 
 
@@ -436,11 +453,17 @@
 
 
                                 <ul class="list-group list-group-flush border-top border-bottom my-3">
+                                
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <strong>Status:</strong>
+                                        <span>${student.status}</span>
+                                    </li>
 
                                     <li class="list-group-item d-flex justify-content-between">
                                         <strong>Student Code:</strong>
                                         <span>${student.student_code}</span>
                                     </li>
+
 
                                     <li class="list-group-item d-flex justify-content-between">
                                         <strong>Course:</strong>

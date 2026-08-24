@@ -152,7 +152,8 @@ class Teachers extends CI_Controller {
             if ($this->Teacher_model->update_teacher(
                 $id,
                 $teacher_data,
-                $user_data
+                $user_data,
+                (int)$this->session->userdata('user_id')
             )) {
 
                 $this->session->set_flashdata(
@@ -170,6 +171,73 @@ class Teachers extends CI_Controller {
 
             redirect('teachers');
         }
+    }
+
+    public function change_status($id) {
+        if ((int)$this->session->userdata('role_id') !== 1) {
+
+            $this->session->set_flashdata(
+                'error',
+                'Only Principals can change teacher status.'
+            );
+
+            redirect('teachers');
+            return;
+        }
+
+        if (!$this->input->post()) {
+
+            $this->session->set_flashdata(
+                'error',
+                'Invalid request.'
+            );
+
+            redirect('teachers');
+            return;
+        }
+
+        $status = $this->input->post('status', TRUE);
+
+        if (!in_array($status, ['active', 'inactive'], TRUE)) {
+
+            $this->session->set_flashdata(
+                'error',
+                'Invalid status.'
+            );
+
+            redirect('teachers');
+            return;
+        }
+
+        $actor_user_id =
+            (int)$this->session->userdata('user_id');
+
+        $result = $this->Teacher_model->change_status(
+            $id,
+            $status,
+            $actor_user_id
+        );
+
+        if ($result) {
+
+            $message = $status === 'active'
+                ? 'Teacher activated successfully.'
+                : 'Teacher deactivated successfully.';
+
+            $this->session->set_flashdata(
+                'success',
+                $message
+            );
+
+        } else {
+
+            $this->session->set_flashdata(
+                'error',
+                'Failed to change teacher status.'
+            );
+        }
+
+        redirect('teachers');
     }
 }
 

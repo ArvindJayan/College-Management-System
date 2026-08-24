@@ -154,6 +154,33 @@
                             <label for="admission_date" class="form-label fw-semibold">Admission Date</label>
                             <input type="date" id="admission_date" name="admission_date" class="form-control focus-ring focus-ring-success" value="<?= html_escape($student->admission_date); ?>">
                         </div>
+
+                        <div class="col-md-6">
+                            <label for="status" class="form-label fw-semibold">
+                                Account Status
+                            </label>
+
+                            <select
+                                id="status"
+                                name="status"
+                                class="form-select focus-ring focus-ring-success"
+                                required
+                            >
+                                <option
+                                    value="active"
+                                    <?= ($student->status === 'active') ? 'selected' : ''; ?>
+                                >
+                                    Active
+                                </option>
+
+                                <option
+                                    value="inactive"
+                                    <?= ($student->status === 'inactive') ? 'selected' : ''; ?>
+                                >
+                                    Inactive
+                                </option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 mt-4">

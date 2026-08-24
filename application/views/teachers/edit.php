@@ -249,7 +249,7 @@
 
                                 </label>
 
-                                <input type="text" class="form-control bg-light" value="<?= html_escape(
+                                <input type="text" name="employee_code" class="form-control bg-light" value="<?= html_escape(
                                     $teacher->employee_code
                                 ); ?>" readonly>
 
@@ -311,6 +311,33 @@
                                         $teacher->joining_date
                                     ); ?>" required>
 
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="status" class="form-label fw-semibold">
+                                    Account Status
+                                </label>
+
+                                <select
+                                    id="status"
+                                    name="status"
+                                    class="form-select focus-ring focus-ring-success"
+                                    required
+                                >
+                                    <option
+                                        value="active"
+                                        <?= ($teacher->status === 'active') ? 'selected' : ''; ?>
+                                    >
+                                        Active
+                                    </option>
+
+                                    <option
+                                        value="inactive"
+                                        <?= ($teacher->status === 'inactive') ? 'selected' : ''; ?>
+                                    >
+                                        Inactive
+                                    </option>
+                                </select>
                             </div>
 
                             <div class="d-flex justify-content-end gap-2 pt-2">

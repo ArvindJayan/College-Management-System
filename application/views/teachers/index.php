@@ -198,6 +198,10 @@
                                     Joining Date
                                 </th>
 
+                                <th>
+                                    Status
+                                </th>
+
                                 <th class="text-end pe-5">
                                     Actions
                                 </th>
@@ -267,6 +271,23 @@
 
                                         </td>
 
+                                        <td>
+                                            <?php if ($teacher->status === 'active'): ?>
+
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                                    Active
+                                                </span>
+
+                                                <?php else: ?>
+
+                                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                                                    Inactive
+                                                </span>
+
+                                            <?php endif; ?>
+                                        </td>
+
+
                                         <td class="text-end pe-4">
 
                                             <button class="btn btn-sm btn-outline-success me-1 btn-view-teacher fw-semibold"
@@ -311,7 +332,6 @@
                                         No teacher profiles found.
 
                                     </td>
-
                                 </tr>
 
                             <?php endif; ?>
@@ -359,12 +379,9 @@
     </div>
 
 
-    <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
     </script>
 
-
-    <!-- AJAX -->
     <script>
 
         document
@@ -481,6 +498,10 @@
 
                                     </li>
 
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <strong>Status:</strong>
+                                        <span>${teacher.status}</span>
+                                    </li>
 
                                     <li
                                         class="list-group-item d-flex justify-content-between">
@@ -508,7 +529,6 @@
                                         </span>
 
                                     </li>
-
 
                                     <li
                                         class="list-group-item d-flex justify-content-between">

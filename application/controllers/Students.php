@@ -26,7 +26,6 @@ class Students extends CI_Controller {
     }
 
     public function index() {
-
         $search = $this->input->get('search', TRUE);
         $course_id = $this->input->get('course_id', TRUE);
 
@@ -37,16 +36,12 @@ class Students extends CI_Controller {
 
         $data['courses'] = $this->Course_model->get_all_courses();
 
-        $data['students'] = $this->Student_model->get_all_students(
-            $search
-        );
+        $data['students'] = $this->Student_model->get_all_students($search);
 
         if (!empty($course_id)) {
-
             $filtered_students = [];
 
             foreach ($data['students'] as $student) {
-
                 if ((int)$student->course_id === (int)$course_id) {
                     $filtered_students[] = $student;
                 }
@@ -58,29 +53,50 @@ class Students extends CI_Controller {
         $this->load->view('students/index', $data);
     }
 
-    public function view_ajax($id) {
+    public function search_ajax() {
+        $search = $this->input->get('search', TRUE);
+        $course_id = $this->input->get('course_id', TRUE);
 
+        $students = $this->Student_model->get_all_students($search);
+
+        if (!empty($course_id)) {
+            $filtered_students = [];
+
+            foreach ($students as $student) {
+                if ((int)$student->course_id === (int)$course_id) {
+                    $filtered_students[] = $student;
+                }
+            }
+
+            $students = $filtered_students;
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'status' => 'success',
+                'data' => $students
+            ]));
+    }
+
+    public function view_ajax($id) {
         $student = $this->Student_model->get_student_by_id($id);
 
         if ($student) {
-
             echo json_encode([
                 'status' => 'success',
-                'data'   => $student
+                'data' => $student
             ]);
-
         } else {
-
             echo json_encode([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'Student record not found.'
             ]);
         }
     }
 
     public function edit($id) {
-        if ((int)$this->session->userdata('role_id') == 4 ) {
-
+        if ((int)$this->session->userdata('role_id') == 4) {
             $this->session->set_flashdata(
                 'error',
                 'Students cannot edit student records.'
@@ -92,7 +108,6 @@ class Students extends CI_Controller {
         $student = $this->Student_model->get_student_by_id($id);
 
         if (!$student) {
-
             $this->session->set_flashdata(
                 'error',
                 'Student not found.'
@@ -147,25 +162,22 @@ class Students extends CI_Controller {
             'status',
             'Account Status',
             'required|in_list[active,inactive]'
-        );  
+        );
 
         if ($this->form_validation->run() == FALSE) {
-
             $data['student'] = $student;
 
             $this->load->model('Course_model');
             $data['courses'] = $this->Course_model->get_all_courses();
 
             $this->load->view('students/edit', $data);
-
         } else {
-
             $student_data = [
-                'student_code'   => $this->input->post('student_code', TRUE),
-                'course_id'      => $this->input->post('course_id', TRUE),
-                'dob'            => $this->input->post('dob', TRUE),
-                'gender'         => $this->input->post('gender', TRUE),
-                'phone'          => $this->input->post('phone', TRUE),
+                'student_code' => $this->input->post('student_code', TRUE),
+                'course_id' => $this->input->post('course_id', TRUE),
+                'dob' => $this->input->post('dob', TRUE),
+                'gender' => $this->input->post('gender', TRUE),
+                'phone' => $this->input->post('phone', TRUE),
                 'admission_date' => $this->input->post('admission_date', TRUE)
             ];
 
@@ -178,17 +190,13 @@ class Students extends CI_Controller {
                 $id,
                 $student_data,
                 $user_data,
-                (int)$this->session->userdata('user_id'),
-
+                (int)$this->session->userdata('user_id')
             )) {
-
                 $this->session->set_flashdata(
                     'success',
                     'Student profile updated successfully.'
                 );
-
             } else {
-
                 $this->session->set_flashdata(
                     'error',
                     'Failed to update student profile.'

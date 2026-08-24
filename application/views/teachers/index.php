@@ -116,7 +116,7 @@
                             </span>
 
                             <input type="text" name="search" class="form-control focus-ring focus-ring-success"
-                                placeholder="Search by name, email or employee code..."
+                                placeholder="Search by name, email or employee code"
                                 value="<?= html_escape($search ?? ''); ?>">
                         </div>
                     </div>

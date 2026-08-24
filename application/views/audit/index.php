@@ -626,7 +626,7 @@
                                     User Agent
                                 </div>
 
-                                <div class="mt-1 text-truncate"
+                                <div class="mt-1"
                                      title="<?= html_escape($log->user_agent); ?>">
                                     <?= html_escape(
                                         $log->user_agent

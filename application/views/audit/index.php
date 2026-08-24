@@ -63,7 +63,7 @@
             color: #212529;
         }
 
-        .actor-email {
+        .actor-role {
             font-size: 0.75rem;
             color: #6c757d;
         }
@@ -200,8 +200,6 @@
 <body>
 
 
-    <!-- NAVBAR -->
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
 
         <div class="container">
@@ -243,7 +241,7 @@
                             <span class="badge bg-light text-success">
 
                                 <?= html_escape(
-                                    $this->session->userdata('role_name') ?? 'User'
+                                    ucfirst($this->session->userdata('role_name') ?? 'User')
                                 ); ?>
 
                             </span>
@@ -308,12 +306,8 @@
 
 
 
-    <!-- PAGE -->
-
     <div class="container-fluid px-4 py-4">
 
-
-        <!-- HEADER -->
 
         <div class="page-header d-flex justify-content-between align-items-center">
 
@@ -321,15 +315,8 @@
 
                 <div class="d-flex align-items-center gap-2 mb-1">
 
-                    <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center"
-                        style="width:42px;height:42px;">
 
-                        <i class="bi bi-journal-text fs-5"></i>
-
-                    </div>
-
-
-                    <h3 class="fw-bold mb-0">
+                    <h3 class="fw-bold mb-0 ms-4">
 
                         Audit Logs
 
@@ -349,7 +336,7 @@
 
             <a href="<?= site_url('dashboard'); ?>" class="btn btn-success fw-semibold">
 
-                Back to Dashboard
+                Go Back
 
             </a>
 
@@ -533,22 +520,19 @@
 
 
 
-                                    <!-- ACTOR -->
-
                                     <td>
 
                                         <div class="actor-name">
-
                                             <?= html_escape(
                                                 $log->actor_name ?? 'Unknown'
                                             ); ?>
 
                                         </div>
 
-                                        <div class="actor-email">
+                                        <div class="actor-role">
 
                                             <?= html_escape(
-                                                $log->actor_email ?? ''
+                                                ucfirst($log->actor_role ?? '')
                                             ); ?>
 
                                         </div>
@@ -886,7 +870,7 @@
 
                                             <div class="modal-footer">
 
-                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                <button type="button" class="btn btn-success fw-semibold" data-bs-dismiss="modal">
 
                                                     Close
 

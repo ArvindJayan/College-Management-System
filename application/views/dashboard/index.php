@@ -43,7 +43,7 @@
                                 class="fw-semibold text-white"><?= html_escape($this->session->userdata('name') ?? 'User'); ?></span>
 
                             <span class="badge bg-light text-success fw-semibold" style="font-size: 0.75rem;">
-                                <?= html_escape($this->session->userdata('role_name') ?? 'User'); ?>
+                                <?= html_escape(ucfirst($this->session->userdata('role_name')) ?? 'User'); ?>
                             </span>
 
                             <div class="rounded-circle bg-white text-success d-flex align-items-center justify-content-center shadow-sm ms-1"
@@ -192,7 +192,7 @@
                     <div class="card h-100 shadow action-card p-2">
                         <div class="card-body text-center p-4">
                             <div class="rounded-circle bg-red-subtle text-success d-inline-flex p-3 mb-3">
-                                <i class="bi bi-file-excel fs-1"></i>
+                                <i class="bi bi-journal-text fs-1"></i> 
                             </div>
                             <h5 class="fw-bold">
                                 Audit Logs

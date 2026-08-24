@@ -84,7 +84,7 @@
                                 style="font-size: 0.75rem;">
 
                                 <?= html_escape(
-                                    $this->session->userdata('role_name') ?? 'User'
+                                    ucfirst($this->session->userdata('role_name') ?? 'User')
                                 ); ?>
 
                             </span>

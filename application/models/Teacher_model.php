@@ -111,31 +111,38 @@ class Teacher_model extends CI_Model {
 
         $this->load->model('Audit_model');
 
+        $old_status = $teacher->status;
+
+        $new_status = isset($user_data['status'])
+            ? $user_data['status']
+            : $old_status;
+
+        unset($user_data['status']);
+
         $this->db->trans_start();
+
 
         $this->db
             ->where('id', $id)
             ->update('teachers', $teacher_data);
 
+
         if (!empty($user_data)) {
+
             $this->db
                 ->where('id', $teacher->user_id)
                 ->update('users', $user_data);
         }
 
-        $old_values = array_merge(
-            [
-                'name' => $teacher->name
-            ],
-            [
-                'employee_code' => $teacher->employee_code,
-                'department_id' => $teacher->department_id,
-                'first_name'    => $teacher->first_name,
-                'last_name'     => $teacher->last_name,
-                'phone'         => $teacher->phone,
-                'joining_date'  => $teacher->joining_date
-            ]
-        );
+        $old_values = [
+            'name'          => $teacher->name,
+            'employee_code' => $teacher->employee_code,
+            'department_id' => $teacher->department_id,
+            'first_name'    => $teacher->first_name,
+            'last_name'     => $teacher->last_name,
+            'phone'         => $teacher->phone,
+            'joining_date'  => $teacher->joining_date
+        ];
 
         $new_values = array_merge(
             $user_data,
@@ -151,6 +158,32 @@ class Teacher_model extends CI_Model {
             $new_values,
             'Teacher profile updated'
         );
+
+        if ($old_status !== $new_status) {
+
+            $this->db
+                ->where('id', $teacher->user_id)
+                ->update('users', [
+                    'status' => $new_status
+                ]);
+
+            $this->Audit_model->log(
+                $actor_user_id,
+                'CHANGE_STATUS',
+                'teachers',
+                $id,
+                [
+                    'status' => $old_status
+                ],
+                [
+                    'status' => $new_status
+                ],
+                'Teacher account status changed from '
+                . $old_status
+                . ' to '
+                . $new_status
+            );
+        }
 
         $this->db->trans_complete();
 

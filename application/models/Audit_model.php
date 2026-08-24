@@ -39,8 +39,8 @@ class Audit_model extends CI_Model {
     public function get_all_logs() {
         $this->db->select('
             audit_logs.*,
-            users.name AS actor_name,
-            roles.name AS actor_role
+            users.name as actor_name,
+            roles.name as actor_role
         ');
 
         $this->db->from('audit_logs');

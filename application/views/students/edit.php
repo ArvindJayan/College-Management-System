@@ -24,7 +24,7 @@
                                 <?= html_escape($this->session->userdata('name') ?? 'User'); ?>
                             </span>
                             <span class="badge bg-light text-success fw-semibold" style="font-size: 0.75rem;">
-                                <?= html_escape($this->session->userdata('role_name') ?? 'User'); ?>
+                                <?= html_escape(ucfirst($this->session->userdata('role_name')) ?? 'User'); ?>
                             </span>
                             <div class="rounded-circle bg-white text-success d-flex align-items-center justify-content-center shadow-sm ms-1" style="width: 38px; height: 38px; flex-shrink: 0;">
                                 <i class="bi bi-person-fill fs-5"></i>

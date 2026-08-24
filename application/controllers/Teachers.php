@@ -128,6 +128,12 @@ class Teachers extends CI_Controller {
             'required'
         );
 
+        $this->form_validation->set_rules(
+            'status',
+            'Account Status',
+            'required|in_list[active,inactive]'
+        );
+
         if ($this->form_validation->run() == FALSE) {
 
             $data['teacher'] = $teacher;

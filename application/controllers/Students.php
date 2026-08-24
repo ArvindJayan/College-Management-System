@@ -79,11 +79,11 @@ class Students extends CI_Controller {
     }
 
     public function edit($id) {
-        if ((int)$this->session->userdata('role_id') !== 1) {
+        if ((int)$this->session->userdata('role_id') == 4 ) {
 
             $this->session->set_flashdata(
                 'error',
-                'Only Principals can edit student records.'
+                'Students cannot edit student records.'
             );
 
             redirect('students');

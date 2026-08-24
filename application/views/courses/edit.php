@@ -73,11 +73,11 @@
             <div class="col-md-7">
 
                 <div class="mb-4">
-
-                    <a href="<?= site_url('courses'); ?>" class="text-decoration-none text-success">
-                        Back to Courses
-
-                    </a>
+                    <div class="d-flex pe-3">
+                        <a href="<?= site_url('courses'); ?>" class="ms-auto btn btn-success fw-semibold">
+                            Back to Courses
+                        </a>
+                    </div>
 
                     <h2 class="fw-bold mt-3 mb-1">
                         Edit Course
@@ -227,7 +227,7 @@
 
                             <div class="d-flex justify-content-end gap-2">
 
-                                <a href="<?= site_url('courses'); ?>" class="btn btn-outline-secondary">
+                                <a href="<?= site_url('courses'); ?>" class="btn btn-outline-success fw-semibold">
 
                                     Cancel
 
@@ -235,8 +235,6 @@
 
                                 <button type="submit" class="btn btn-success fw-semibold">
 
-                                    <i class="bi bi-check-circle me-1">
-                                    </i>
 
                                     Save Changes
 

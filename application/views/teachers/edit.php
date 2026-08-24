@@ -79,8 +79,6 @@
             <div class="col-lg-7 col-md-9">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h4 class="fw-bold text-dark mb-0">
-                        <i class="bi bi-pencil-square text-success me-2">
-                        </i>
                         Edit Teacher Record
                     </h4>
 
@@ -325,9 +323,6 @@
 
 
                                 <button type="submit" class="btn btn-success fw-semibold">
-
-                                    <i class="bi bi-check-lg me-1">
-                                    </i>
 
                                     Save Changes
 

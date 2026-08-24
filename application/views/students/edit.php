@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Student - College Management System</title>
+    <title>College Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
@@ -82,7 +82,24 @@
 
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4">
-                <form action="<?= site_url('students/update_student/' . $student->id); ?>" method="POST">
+                <?php if (validation_errors()): ?>
+
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                        <?= validation_errors(); ?>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+                        </button>
+
+                    </div>
+
+                <?php endif; ?>
+                <form action="<?= site_url('students/edit/' . $student->id); ?>" method="POST">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="name" class="form-label fw-semibold">Student Name</label>
@@ -122,9 +139,9 @@
                             <label for="gender" class="form-label fw-semibold">Gender</label>
                             <select id="gender" name="gender" class="form-select focus-ring focus-ring-success" required>
                                 <option value="">Select Gender</option>
-                                <option value="Male" <?= ($student->gender === 'Male') ? 'selected' : ''; ?>>Male</option>
-                                <option value="Female" <?= ($student->gender === 'Female') ? 'selected' : ''; ?>>Female</option>
-                                <option value="Other" <?= ($student->gender === 'Other') ? 'selected' : ''; ?>>Other</option>
+                                <option value="male" <?= ($student->gender === 'male') ? 'selected' : ''; ?>>Male</option>
+                                <option value="female" <?= ($student->gender === 'female') ? 'selected' : ''; ?>>Female</option>
+                                <option value="other" <?= ($student->gender === 'other') ? 'selected' : ''; ?>>Other</option>
                             </select>
                         </div>
 
@@ -140,11 +157,10 @@
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 mt-4">
-                        <a href="<?= site_url('students'); ?>" class="btn btn-outline-secondary fw-semibold">
+                        <a href="<?= site_url('students'); ?>" class="btn btn-outline-success fw-semibold">
                             Cancel
                         </a>
                         <button type="submit" class="btn btn-success fw-semibold">
-                            <i class="bi bi-check-circle me-1"></i>
                             Update Student
                         </button>
                     </div>

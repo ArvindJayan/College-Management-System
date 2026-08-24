@@ -273,8 +273,6 @@
                                                 data-id="<?= $teacher->id; ?>" data-bs-toggle="modal"
                                                 data-bs-target="#viewTeacherModal">
 
-                                                <i class="bi bi-eye me-1"></i>
-
                                                 View
 
                                             </button>
@@ -288,7 +286,6 @@
                                                     $teacher->id
                                                 ); ?>" class="btn btn-sm btn-success fw-semibold">
 
-                                                    <i class="bi bi-pencil me-1"></i>
 
                                                     Edit
 

@@ -118,7 +118,6 @@
     <div class="container py-5">
 
 
-        <!-- Page Header -->
 
         <div class="d-flex justify-content-between align-items-center mb-4">
 
@@ -128,10 +127,13 @@
                     Courses
                 </h2>
 
+                <?php $role_id = (int) $this->session->userdata('role_id'); ?>
+                
+                <?php if ($role_id == 1 || $role_id == 2): ?>
                 <p class="text-muted mb-0">
                     Manage college courses.
                 </p>
-
+                <?php endif; ?>
             </div>
 
 
@@ -162,9 +164,6 @@
             </div>
 
         </div>
-
-
-        <!-- Student's Enrolled Course -->
 
         <?php if (
             $role_id === 4 &&
@@ -412,10 +411,7 @@
                                                 <a href="<?= site_url(
                                                     'courses/edit/' .
                                                     $course->id
-                                                ); ?>" class="btn btn-sm btn-success fw-semibold">
-
-                                                    <i class="bi bi-pencil me-1">
-                                                    </i>
+                                                ); ?>" class="btn btn-sm btn-outline-success fw-semibold">
 
                                                     Edit
 
@@ -425,11 +421,8 @@
                                                 <a href="<?= site_url(
                                                     'courses/delete/' .
                                                     $course->id
-                                                ); ?>" class="btn btn-sm btn-outline-danger fw-semibold"
+                                                ); ?>" class="btn btn-sm btn-success fw-semibold"
                                                     onclick="return confirm('Are you sure you want to delete this course?');">
-
-                                                    <i class="bi bi-trash me-1">
-                                                    </i>
 
                                                     Delete
 

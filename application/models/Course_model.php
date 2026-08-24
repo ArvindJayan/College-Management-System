@@ -13,7 +13,11 @@ class Course_model extends CI_Model
     public function get_all_courses()
     {
         return $this->db
-            ->select('courses.*, departments.name AS department_name, departments.code AS department_code')
+            ->select(
+                'courses.*,
+                 departments.name AS department_name,
+                 departments.code AS department_code'
+            )
             ->from('courses')
             ->join(
                 'departments',
@@ -28,7 +32,11 @@ class Course_model extends CI_Model
     public function get_course($id)
     {
         return $this->db
-            ->select('courses.*, departments.name AS department_name, departments.code AS department_code')
+            ->select(
+                'courses.*,
+                 departments.name AS department_name,
+                 departments.code AS department_code'
+            )
             ->from('courses')
             ->join(
                 'departments',
@@ -36,6 +44,28 @@ class Course_model extends CI_Model
                 'left'
             )
             ->where('courses.id', $id)
+            ->get()
+            ->row();
+    }
+
+    public function get_student_course($user_id)
+    {
+        return $this->db
+            ->select(
+                'courses.*,
+                 departments.name AS department_name,
+                 departments.code AS department_code'
+            )
+            ->from('students')
+            ->join(
+                'courses',
+                'courses.id = students.course_id'
+            )
+            ->join(
+                'departments',
+                'departments.id = courses.department_id'
+            )
+            ->where('students.user_id', $user_id)
             ->get()
             ->row();
     }

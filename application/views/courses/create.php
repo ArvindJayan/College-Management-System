@@ -75,9 +75,6 @@
                 <div class="mb-4">
 
                     <a href="<?= site_url('courses'); ?>" class="text-decoration-none text-success">
-
-                        <i class="bi bi-arrow-left me-1"></i>
-
                         Back to Courses
 
                     </a>

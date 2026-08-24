@@ -16,11 +16,17 @@ class Subjects extends CI_Controller
 
     public function index()
     {
-        $user_id = (int) $this->session->userdata('user_id');
+        $user_id =
+            (int) $this->session->userdata('user_id');
 
         $data['subjects'] =
-            $this->Subject_model->get_student_subjects($user_id);
+            $this->Subject_model->get_student_subjects(
+                $user_id
+            );
 
-        $this->load->view('subjects/index', $data);
+        $this->load->view(
+            'subjects/index',
+            $data
+        );
     }
 }

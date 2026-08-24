@@ -85,7 +85,6 @@
                     </h4>
 
                     <a href="<?= site_url('teachers'); ?>" class="btn btn-outline-success fw-semibold">
-                        <i class="bi bi-arrow-left me-1"></i>
                         Back to Directory
                     </a>
                 </div>

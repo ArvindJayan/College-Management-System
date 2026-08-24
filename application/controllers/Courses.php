@@ -17,15 +17,44 @@ class Courses extends CI_Controller
         $this->load->model('Department_model');
     }
 
+    private function require_principal()
+    {
+        if ((int) $this->session->userdata('role_id') !== 1) {
+            show_error(
+                'You are not authorized to perform this action.',
+                403
+            );
+        }
+    }
+
     public function index()
     {
-        $data['courses'] = $this->Course_model->get_all_courses();
+        $data['courses'] =
+            $this->Course_model->get_all_courses();
+
+        $role_id =
+            (int) $this->session->userdata('role_id');
+
+        /*
+         * Only students need their enrolled course.
+         * Role ID 4 = student.
+         */
+        if ($role_id === 4) {
+
+            $user_id =
+                (int) $this->session->userdata('user_id');
+
+            $data['student_course'] =
+                $this->Course_model->get_student_course($user_id);
+        }
 
         $this->load->view('courses/index', $data);
     }
 
     public function create()
     {
+        $this->require_principal();
+
         $this->form_validation->set_rules(
             'department_id',
             'Department',
@@ -55,13 +84,19 @@ class Courses extends CI_Controller
             $data['departments'] =
                 $this->Department_model->get_all_departments();
 
-            $this->load->view('courses/create', $data);
+            $this->load->view(
+                'courses/create',
+                $data
+            );
 
             return;
         }
 
-        $name = $this->input->post('name', TRUE);
-        $code = $this->input->post('code', TRUE);
+        $name =
+            $this->input->post('name', TRUE);
+
+        $code =
+            $this->input->post('code', TRUE);
 
         if ($this->Course_model->name_exists($name)) {
 
@@ -92,8 +127,11 @@ class Courses extends CI_Controller
                 'department_id',
                 TRUE
             ),
+
             'name' => $name,
+
             'code' => $code,
+
             'duration_years' => $this->input->post(
                 'duration_years',
                 TRUE
@@ -122,7 +160,10 @@ class Courses extends CI_Controller
 
     public function edit($id)
     {
-        $course = $this->Course_model->get_course($id);
+        $this->require_principal();
+
+        $course =
+            $this->Course_model->get_course($id);
 
         if (!$course) {
             show_404();
@@ -154,20 +195,32 @@ class Courses extends CI_Controller
 
         if ($this->form_validation->run() === FALSE) {
 
-            $data['course'] = $course;
+            $data['course'] =
+                $course;
 
             $data['departments'] =
                 $this->Department_model->get_all_departments();
 
-            $this->load->view('courses/edit', $data);
+            $this->load->view(
+                'courses/edit',
+                $data
+            );
 
             return;
         }
 
-        $name = $this->input->post('name', TRUE);
-        $code = $this->input->post('code', TRUE);
+        $name =
+            $this->input->post('name', TRUE);
 
-        if ($this->Course_model->name_exists($name, $id)) {
+        $code =
+            $this->input->post('code', TRUE);
+
+        if (
+            $this->Course_model->name_exists(
+                $name,
+                $id
+            )
+        ) {
 
             $this->session->set_flashdata(
                 'error',
@@ -179,7 +232,12 @@ class Courses extends CI_Controller
             return;
         }
 
-        if ($this->Course_model->code_exists($code, $id)) {
+        if (
+            $this->Course_model->code_exists(
+                $code,
+                $id
+            )
+        ) {
 
             $this->session->set_flashdata(
                 'error',
@@ -196,15 +254,23 @@ class Courses extends CI_Controller
                 'department_id',
                 TRUE
             ),
+
             'name' => $name,
+
             'code' => $code,
+
             'duration_years' => $this->input->post(
                 'duration_years',
                 TRUE
             )
         );
 
-        if ($this->Course_model->update_course($id, $course_data)) {
+        if (
+            $this->Course_model->update_course(
+                $id,
+                $course_data
+            )
+        ) {
 
             $this->session->set_flashdata(
                 'success',
@@ -226,13 +292,18 @@ class Courses extends CI_Controller
 
     public function delete($id)
     {
-        $course = $this->Course_model->get_course($id);
+        $this->require_principal();
+
+        $course =
+            $this->Course_model->get_course($id);
 
         if (!$course) {
             show_404();
         }
 
-        if ($this->Course_model->delete_course($id)) {
+        if (
+            $this->Course_model->delete_course($id)
+        ) {
 
             $this->session->set_flashdata(
                 'success',
@@ -240,6 +311,7 @@ class Courses extends CI_Controller
             );
 
         } else {
+
             $this->session->set_flashdata(
                 'error',
                 'Unable to delete course. The course may already be in use.'

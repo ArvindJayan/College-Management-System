@@ -27,9 +27,18 @@ class Subject_model extends CI_Model
                 'subjects',
                 'subjects.course_id = courses.id'
             )
-            ->where('students.user_id', $user_id)
-            ->order_by('subjects.semester', 'ASC')
-            ->order_by('subjects.name', 'ASC')
+            ->where(
+                'students.user_id',
+                $user_id
+            )
+            ->order_by(
+                'subjects.semester',
+                'ASC'
+            )
+            ->order_by(
+                'subjects.name',
+                'ASC'
+            )
             ->get()
             ->result();
     }

@@ -268,15 +268,9 @@
         <div class="card-header bg-white border-bottom py-3 px-4">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h6 class="fw-bold mb-1">
+                    <h6 class="fw-bold mb-3">
                         Activity History
                     </h6>
-
-                    <small class="text-muted">
-                        <?= count($logs); ?>
-                        <?= count($logs) === 1 ? 'record' : 'records'; ?>
-                    </small>
-                </div>
             </div>
         </div>
 

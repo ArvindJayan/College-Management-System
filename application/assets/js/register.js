@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Registration.js loaded")
     const form = document.getElementById('registrationForm');
     if (!form) return;
 

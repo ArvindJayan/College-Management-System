@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>College Management System</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-
     <style>
         body {
             background-color: #f8f9fa;
@@ -133,24 +126,6 @@
         .date-time .time {
             color: #6c757d;
         }
-
-        .value-preview {
-            max-width: 220px;
-        }
-
-        .value-preview pre {
-            margin: 0;
-            padding: 0.55rem 0.7rem;
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 6px;
-            font-size: 0.72rem;
-            line-height: 1.4;
-            max-height: 80px;
-            overflow: hidden;
-            color: #495057;
-        }
-
         .details-btn {
             font-size: 0.8rem;
         }
@@ -165,14 +140,7 @@
         }
 
         .table-container {
-            max-height: 70vh;
-            overflow: auto;
-        }
-
-        .table-container thead th {
-            position: sticky;
-            top: 0;
-            z-index: 2;
+            overflow: visible;
         }
 
         .modal-json {
@@ -192,181 +160,568 @@
             color: #6c757d;
             letter-spacing: 0.04em;
         }
+
+        .changes-table th {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #6c757d;
+        }
+
+        .changes-table td {
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
     </style>
-
 </head>
-
-
 <body>
 
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="<?= site_url('dashboard'); ?>">
+            <i class="bi bi-book-half fs-3 me-2"></i>
+            CMS Portal
+        </a>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dashNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <div class="container">
+        <div class="collapse navbar-collapse" id="dashNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center gap-2"
+                       href="#"
+                       id="userDropdown"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
 
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="<?= site_url('dashboard'); ?>">
+                        <span class="fw-semibold">
+                            <?= html_escape(
+                                $this->session->userdata('name') ?? 'User'
+                            ); ?>
+                        </span>
 
-                <i class="bi bi-book-half fs-3 me-2"></i>
+                        <span class="badge bg-light text-success">
+                            <?= html_escape(
+                                ucfirst(
+                                    $this->session->userdata('role_name') ?? 'User'
+                                )
+                            ); ?>
+                        </span>
 
-                CMS Portal
+                        <div class="rounded-circle bg-white text-success d-flex align-items-center justify-content-center shadow-sm"
+                             style="width:38px;height:38px;">
+                            <i class="bi bi-person-fill fs-5"></i>
+                        </div>
+                    </a>
 
-            </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                        <li>
+                            <a class="dropdown-item py-2" href="<?= site_url('profile'); ?>">
+                                <i class="bi bi-person-gear text-success me-2"></i>
+                                My Profile
+                            </a>
+                        </li>
 
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dashNav">
+                        <li>
+                            <a class="dropdown-item py-2 text-success fw-semibold"
+                               href="<?= site_url('auth/logout'); ?>">
+                                <i class="bi bi-box-arrow-right me-2"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-                <span class="navbar-toggler-icon"></span>
+<div class="container-fluid px-4 py-4">
 
-            </button>
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <h3 class="fw-bold mb-0 ms-4">
+                    Audit Logs
+                </h3>
+            </div>
 
+            <p class="text-muted mb-0 ms-5">
+                Review administrative activity and system changes.
+            </p>
+        </div>
 
-            <div class="collapse navbar-collapse" id="dashNav">
+        <a href="<?= site_url('dashboard'); ?>" class="btn btn-success fw-semibold">
+            Go Back
+        </a>
+    </div>
 
-                <ul class="navbar-nav ms-auto align-items-center">
+    <div class="card audit-card shadow">
 
-                    <li class="nav-item dropdown">
+        <div class="card-header bg-white border-bottom py-3 px-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="fw-bold mb-1">
+                        Activity History
+                    </h6>
 
-                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center gap-2" href="#"
-                            id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <small class="text-muted">
+                        <?= count($logs); ?>
+                        <?= count($logs) === 1 ? 'record' : 'records'; ?>
+                    </small>
+                </div>
+            </div>
+        </div>
 
-                            <span class="fw-semibold">
+        <div class="table-container">
+            <table class="table audit-table table-hover align-middle">
 
+                <thead>
+                    <tr>
+                        <th>Date / Time</th>
+                        <th>Actor</th>
+                        <th>Action</th>
+                        <th>Resource</th>
+                        <th>Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <?php if (!empty($logs)): ?>
+
+                        <?php foreach ($logs as $log): ?>
+
+                            <?php
+                            switch ($log->action) {
+                                case 'UPDATE_STUDENT':
+                                    $badge_class = 'action-update';
+                                    $action_label = 'Update Student';
+                                    break;
+
+                                case 'UPDATE_TEACHER':
+                                    $badge_class = 'action-update';
+                                    $action_label = 'Update Teacher';
+                                    break;
+
+                                case 'CHANGE_STATUS':
+                                    $badge_class = 'action-status';
+                                    $action_label = 'Change Status';
+                                    break;
+
+                                default:
+                                    $badge_class = 'action-default';
+                                    $action_label = ucwords(
+                                        strtolower(
+                                            str_replace(
+                                                '_',
+                                                ' ',
+                                                $log->action
+                                            )
+                                        )
+                                    );
+                                    break;
+                            }
+
+                            $old_values = json_decode(
+                                $log->old_values,
+                                TRUE
+                            ) ?: [];
+
+                            $new_values = json_decode(
+                                $log->new_values,
+                                TRUE
+                            ) ?: [];
+
+                            $field_labels = [
+                                'name' => 'Name',
+                                'student_code' => 'Student Code',
+                                'employee_code' => 'Employee Code',
+                                'course_id' => 'Course',
+                                'department_id' => 'Department',
+                                'dob' => 'Date of Birth',
+                                'gender' => 'Gender',
+                                'phone' => 'Phone',
+                                'admission_date' => 'Admission Date',
+                                'joining_date' => 'Joining Date',
+                                'status' => 'Status'
+                            ];
+                            ?>
+
+                            <tr>
+
+                                <td>
+                                    <div class="date-time">
+                                        <div class="date">
+                                            <?= html_escape(
+                                                date(
+                                                    'd M Y',
+                                                    strtotime($log->created_at)
+                                                )
+                                            ); ?>
+                                        </div>
+
+                                        <div class="time">
+                                            <?= html_escape(
+                                                date(
+                                                    'h:i A',
+                                                    strtotime($log->created_at)
+                                                )
+                                            ); ?>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="actor-name">
+                                        <?= html_escape(
+                                            $log->actor_name ?? 'Unknown'
+                                        ); ?>
+                                    </div>
+
+                                    <div class="actor-role">
+                                        <?= html_escape(
+                                            ucfirst(
+                                                $log->actor_role ?? ''
+                                            )
+                                        ); ?>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="action-badge <?= $badge_class; ?>">
+                                        <?= html_escape($action_label); ?>
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-name">
+                                        <?= html_escape(
+                                            $log->table_name
+                                        ); ?>
+                                    </div>
+
+                                    <div class="mt-1">
+                                        ID:
+                                        <?= (int)$log->record_id; ?>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="description">
+                                        <?= html_escape(
+                                            $log->description
+                                        ); ?>
+                                    </div>
+                                </td>
+
+                                <td class="text-end">
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-success details-btn fw-semibold"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#logModal<?= (int)$log->id; ?>">
+                                        Details
+                                    </button>
+                                </td>
+
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    <?php else: ?>
+
+                        <tr>
+                            <td colspan="6" class="text-center">
+
+                                <div class="empty-state">
+                                    <i class="bi bi-journal-x d-block mb-3"></i>
+
+                                    <h6 class="fw-bold text-dark">
+                                        No audit logs found
+                                    </h6>
+
+                                    <p class="text-muted mb-0">
+                                        Administrative activity will appear here.
+                                    </p>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    <?php endif; ?>
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php if (!empty($logs)): ?>
+
+    <?php foreach ($logs as $log): ?>
+
+        <?php
+        switch ($log->action) {
+            case 'UPDATE_STUDENT':
+                $badge_class = 'action-update';
+                $action_label = 'Update Student';
+                break;
+
+            case 'UPDATE_TEACHER':
+                $badge_class = 'action-update';
+                $action_label = 'Update Teacher';
+                break;
+
+            case 'CHANGE_STATUS':
+                $badge_class = 'action-status';
+                $action_label = 'Change Status';
+                break;
+
+            default:
+                $badge_class = 'action-default';
+                $action_label = ucwords(
+                    strtolower(
+                        str_replace(
+                            '_',
+                            ' ',
+                            $log->action
+                        )
+                    )
+                );
+                break;
+        }
+
+        $old_values = json_decode(
+            $log->old_values,
+            TRUE
+        ) ?: [];
+
+        $new_values = json_decode(
+            $log->new_values,
+            TRUE
+        ) ?: [];
+
+        $field_labels = [
+            'name' => 'Name',
+            'student_code' => 'Student Code',
+            'employee_code' => 'Employee Code',
+            'course_id' => 'Course',
+            'department_id' => 'Department',
+            'dob' => 'Date of Birth',
+            'gender' => 'Gender',
+            'phone' => 'Phone',
+            'admission_date' => 'Admission Date',
+            'joining_date' => 'Joining Date',
+            'status' => 'Status'
+        ];
+        ?>
+
+        <div class="modal fade"
+             id="logModal<?= (int)$log->id; ?>"
+             tabindex="-1"
+             aria-hidden="true">
+
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+
+                <div class="modal-content border-0 shadow">
+
+                    <div class="modal-header">
+
+                        <div>
+                            <h5 class="modal-title fw-bold">
+                                Audit Log Details
+                            </h5>
+
+                            <small class="text-muted">
+                                Log #<?= (int)$log->id; ?>
+                            </small>
+                        </div>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="row g-3 mb-4">
+
+                            <div class="col-md-4">
+                                <div class="info-label">
+                                    Action
+                                </div>
+
+                                <div class="mt-1">
+                                    <span class="action-badge <?= $badge_class; ?>">
+                                        <?= html_escape($action_label); ?>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="info-label">
+                                    Actor
+                                </div>
+
+                                <div class="mt-1 fw-semibold">
+                                    <?= html_escape(
+                                        $log->actor_name ?? 'Unknown'
+                                    ); ?>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="info-label">
+                                    Date
+                                </div>
+
+                                <div class="mt-1">
+                                    <?= html_escape(
+                                        $log->created_at
+                                    ); ?>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="info-label">
+                                    Resource
+                                </div>
+
+                                <div class="mt-1">
+                                    <?= html_escape(
+                                        $log->table_name
+                                    ); ?>
+
+                                    #
+
+                                    <?= (int)$log->record_id; ?>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="info-label">
+                                    IP Address
+                                </div>
+
+                                <div class="mt-1">
+                                    <?= html_escape(
+                                        $log->ip_address
+                                    ); ?>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="info-label">
+                                    User Agent
+                                </div>
+
+                                <div class="mt-1 text-truncate"
+                                     title="<?= html_escape($log->user_agent); ?>">
+                                    <?= html_escape(
+                                        $log->user_agent
+                                    ); ?>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <div class="info-label mb-2">
+                                Description
+                            </div>
+
+                            <div>
                                 <?= html_escape(
-                                    $this->session->userdata('name') ?? 'User'
+                                    $log->description
                                 ); ?>
+                            </div>
 
-                            </span>
+                        </div>
 
+                        <div>
 
-                            <span class="badge bg-light text-success">
+                            <div class="info-label mb-2">
+                                Changes
+                            </div>
 
-                                <?= html_escape(
-                                    ucfirst($this->session->userdata('role_name') ?? 'User')
-                                ); ?>
+                            <div class="table-responsive">
 
-                            </span>
+                                <table class="table table-bordered changes-table mb-0">
 
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Previous</th>
+                                            <th>New</th>
+                                        </tr>
+                                    </thead>
 
-                            <div class="rounded-circle bg-white text-success d-flex align-items-center justify-content-center shadow-sm"
-                                style="width:38px;height:38px;">
+                                    <tbody>
 
-                                <i class="bi bi-person-fill fs-5"></i>
+                                        <?php foreach ($new_values as $field => $new_value): ?>
+
+                                            <tr>
+
+                                                <td class="fw-semibold">
+                                                    <?= html_escape(
+                                                        $field_labels[$field]
+                                                        ?? ucwords(
+                                                            str_replace(
+                                                                '_',
+                                                                ' ',
+                                                                $field
+                                                            )
+                                                        )
+                                                    ); ?>
+                                                </td>
+
+                                                <td>
+                                                    <?= html_escape(
+                                                        $old_values[$field]
+                                                        ?? 'NULL'
+                                                    ); ?>
+                                                </td>
+
+                                                <td>
+                                                    <?= html_escape(
+                                                        $new_value
+                                                        ?? 'NULL'
+                                                    ); ?>
+                                                </td>
+
+                                            </tr>
+
+                                        <?php endforeach; ?>
+
+                                    </tbody>
+
+                                </table>
 
                             </div>
 
-                        </a>
+                        </div>
 
+                    </div>
 
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                    <div class="modal-footer">
 
-                            <li>
-
-                                <a class="dropdown-item py-2" href="<?= site_url('profile'); ?>">
-
-                                    <i class="bi bi-person-gear text-success me-2"></i>
-
-                                    My Profile
-
-                                </a>
-
-                            </li>
-
-
-                            <li>
-
-                                <hr class="dropdown-divider">
-
-                            </li>
-
-
-                            <li>
-
-                                <a class="dropdown-item py-2 text-success fw-semibold"
-                                    href="<?= site_url('auth/logout'); ?>">
-
-                                    <i class="bi bi-box-arrow-right me-2"></i>
-
-                                    Logout
-
-                                </a>
-
-                            </li>
-
-                        </ul>
-
-                    </li>
-
-                </ul>
-
-            </div>
-
-        </div>
-
-    </nav>
-
-
-
-    <div class="container-fluid px-4 py-4">
-
-
-        <div class="page-header d-flex justify-content-between align-items-center">
-
-            <div>
-
-                <div class="d-flex align-items-center gap-2 mb-1">
-
-
-                    <h3 class="fw-bold mb-0 ms-4">
-
-                        Audit Logs
-
-                    </h3>
-
-                </div>
-
-
-                <p class="text-muted mb-0 ms-5">
-
-                    Review administrative activity and system changes.
-
-                </p>
-
-            </div>
-
-
-            <a href="<?= site_url('dashboard'); ?>" class="btn btn-success fw-semibold">
-
-                Go Back
-
-            </a>
-
-        </div>
-
-
-
-        <!-- LOG TABLE -->
-
-        <div class="card audit-card shadow-sm">
-
-            <div class="card-header bg-white border-bottom py-3 px-4">
-
-                <div class="d-flex justify-content-between align-items-center">
-
-                    <div>
-
-                        <h6 class="fw-bold mb-1">
-
-                            Activity History
-
-                        </h6>
-
-                        <small class="text-muted">
-
-                            <?= count($logs); ?>
-
-                            <?= count($logs) === 1 ? 'record' : 'records'; ?>
-
-                        </small>
+                        <button type="button"
+                                class="btn btn-success fw-semibold"
+                                data-bs-dismiss="modal">
+                            Close
+                        </button>
 
                     </div>
 
@@ -374,568 +729,13 @@
 
             </div>
 
-
-            <div class="table-container">
-
-                <table class="table audit-table table-hover align-middle">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Date / Time</th>
-
-                            <th>Actor</th>
-
-                            <th>Action</th>
-
-                            <th>Resource</th>
-
-                            <th>Description</th>
-
-                            <th>Changes</th>
-
-                            <th></th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-
-                        <?php if (!empty($logs)): ?>
-
-
-                            <?php foreach ($logs as $log): ?>
-
-
-                                <?php
-
-                                switch ($log->action) {
-
-                                    case 'UPDATE_STUDENT':
-
-                                        $badge_class = 'action-update';
-
-                                        $action_label = 'Update Student';
-
-                                        break;
-
-                                    case 'CHANGE_STATUS':
-
-                                        $badge_class = 'action-status';
-
-                                        $action_label = 'Change Status';
-
-                                        break;
-
-                                    case 'LOGIN':
-
-                                        $badge_class = 'action-login';
-
-                                        $action_label = 'Login';
-
-                                        break;
-
-                                    case 'LOGOUT':
-
-                                        $badge_class = 'action-logout';
-
-                                        $action_label = 'Logout';
-
-                                        break;
-
-                                    default:
-
-                                        $badge_class = 'action-default';
-
-                                        $action_label = ucwords(
-                                            strtolower(
-                                                str_replace(
-                                                    '_',
-                                                    ' ',
-                                                    $log->action
-                                                )
-                                            )
-                                        );
-
-                                        break;
-                                }
-
-
-                                $old_values = json_decode(
-                                    $log->old_values,
-                                    TRUE
-                                );
-
-
-                                $new_values = json_decode(
-                                    $log->new_values,
-                                    TRUE
-                                );
-
-
-                                ?>
-
-
-                                <tr>
-
-
-
-                                    <td>
-
-                                        <div class="date-time">
-
-                                            <div class="date">
-
-                                                <?= html_escape(
-                                                    date(
-                                                        'd M Y',
-                                                        strtotime(
-                                                            $log->created_at
-                                                        )
-                                                    )
-                                                ); ?>
-
-                                            </div>
-
-                                            <div class="time">
-
-                                                <?= html_escape(
-                                                    date(
-                                                        'h:i A',
-                                                        strtotime(
-                                                            $log->created_at
-                                                        )
-                                                    )
-                                                ); ?>
-
-                                            </div>
-
-                                        </div>
-
-                                    </td>
-
-
-
-                                    <td>
-
-                                        <div class="actor-name">
-                                            <?= html_escape(
-                                                $log->actor_name ?? 'Unknown'
-                                            ); ?>
-
-                                        </div>
-
-                                        <div class="actor-role">
-
-                                            <?= html_escape(
-                                                ucfirst($log->actor_role ?? '')
-                                            ); ?>
-
-                                        </div>
-
-                                    </td>
-
-
-
-                                    <!-- ACTION -->
-
-                                    <td>
-
-                                        <span class="action-badge <?= $badge_class; ?>">
-
-                                            <?= html_escape(
-                                                $action_label
-                                            ); ?>
-
-                                        </span>
-
-                                    </td>
-
-
-
-                                    <td>
-
-                                        <div class="table-name">
-
-                                            <?= html_escape(
-                                                $log->table_name
-                                            ); ?>
-
-                                        </div>
-
-                                        <div class="mt-1">
-
-
-                                            ID:
-
-                                            <?= (int) $log->record_id; ?>
-
-
-                                        </div>
-
-                                    </td>
-
-
-
-                                    <!-- DESCRIPTION -->
-
-                                    <td>
-
-                                        <div class="description">
-
-                                            <?= html_escape(
-                                                $log->description
-                                            ); ?>
-
-                                        </div>
-
-                                    </td>
-
-
-
-                                    <!-- CHANGES -->
-
-                                    <td>
-
-                                        <div class="value-preview">
-
-                                            <pre><?= html_escape(
-                                                json_encode(
-                                                    $new_values,
-                                                    JSON_PRETTY_PRINT
-                                                )
-                                            ); ?></pre>
-
-                                        </div>
-
-                                    </td>
-
-
-
-
-                                    <td class="text-end">
-
-                                        <button type="button" class="btn btn-sm btn-outline-success details-btn fw-semibold"
-                                            data-bs-toggle="modal" data-bs-target="#logModal<?= (int) $log->id; ?>">
-
-                                            Details
-
-                                        </button>
-
-                                    </td>
-
-
-                                </tr>
-
-
-
-                                <!-- DETAILS MODAL -->
-
-                                <div class="modal fade" id="logModal<?= (int) $log->id; ?>" tabindex="-1" aria-hidden="true">
-
-                                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-
-                                        <div class="modal-content border-0 shadow">
-
-                                            <div class="modal-header">
-
-                                                <div>
-
-                                                    <h5 class="modal-title fw-bold">
-
-                                                        Audit Log Details
-
-                                                    </h5>
-
-                                                    <small class="text-muted">
-
-                                                        Log #<?= (int) $log->id; ?>
-
-                                                    </small>
-
-                                                </div>
-
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                            </div>
-
-
-                                            <div class="modal-body">
-
-
-                                                <div class="row g-3 mb-4">
-
-
-                                                    <div class="col-md-4">
-
-                                                        <div class="info-label">
-
-                                                            Action
-
-                                                        </div>
-
-                                                        <div class="mt-1">
-
-                                                            <span class="action-badge <?= $badge_class; ?>">
-
-                                                                <?= html_escape(
-                                                                    $action_label
-                                                                ); ?>
-
-                                                            </span>
-
-                                                        </div>
-
-                                                    </div>
-
-
-                                                    <div class="col-md-4">
-
-                                                        <div class="info-label">
-
-                                                            Actor
-
-                                                        </div>
-
-                                                        <div class="mt-1 fw-semibold">
-
-                                                            <?= html_escape(
-                                                                $log->actor_name ?? 'Unknown'
-                                                            ); ?>
-
-                                                        </div>
-
-                                                    </div>
-
-
-                                                    <div class="col-md-4">
-
-                                                        <div class="info-label">
-
-                                                            Date
-
-                                                        </div>
-
-                                                        <div class="mt-1">
-
-                                                            <?= html_escape(
-                                                                $log->created_at
-                                                            ); ?>
-
-                                                        </div>
-
-                                                    </div>
-
-
-                                                    <div class="col-md-4">
-
-                                                        <div class="info-label">
-
-                                                            Resource
-
-                                                        </div>
-
-                                                        <div class="mt-1">
-
-                                                            <?= html_escape(
-                                                                $log->table_name
-                                                            ); ?>
-
-                                                            #
-
-                                                            <?= (int) $log->record_id; ?>
-
-                                                        </div>
-
-                                                    </div>
-
-
-                                                    <div class="col-md-4">
-
-                                                        <div class="info-label">
-
-                                                            IP Address
-
-                                                        </div>
-
-                                                        <div class="mt-1">
-
-                                                            <?= html_escape(
-                                                                $log->ip_address
-                                                            ); ?>
-
-                                                        </div>
-
-                                                    </div>
-
-
-                                                    <div class="col-md-4">
-
-                                                        <div class="info-label">
-
-                                                            User Agent
-
-                                                        </div>
-
-                                                        <div class="mt-1 text-truncate"
-                                                            title="<?= html_escape($log->user_agent); ?>">
-
-                                                            <?= html_escape(
-                                                                $log->user_agent
-                                                            ); ?>
-
-                                                        </div>
-
-                                                    </div>
-
-
-                                                </div>
-
-
-                                                <div class="mb-4">
-
-                                                    <div class="info-label mb-2">
-
-                                                        Description
-
-                                                    </div>
-
-                                                    <div>
-
-                                                        <?= html_escape(
-                                                            $log->description
-                                                        ); ?>
-
-                                                    </div>
-
-                                                </div>
-
-
-                                                <div class="row g-4">
-
-
-                                                    <div class="col-md-6">
-
-                                                        <div class="info-label mb-2">
-
-                                                            Previous Values
-
-                                                        </div>
-
-                                                        <div class="modal-json">
-
-                                                            <?= html_escape(
-                                                                json_encode(
-                                                                    $old_values,
-                                                                    JSON_PRETTY_PRINT
-                                                                )
-                                                            ); ?>
-
-                                                        </div>
-
-                                                    </div>
-
-
-                                                    <div class="col-md-6">
-
-                                                        <div class="info-label mb-2">
-
-                                                            New Values
-
-                                                        </div>
-
-                                                        <div class="modal-json">
-
-                                                            <?= html_escape(
-                                                                json_encode(
-                                                                    $new_values,
-                                                                    JSON_PRETTY_PRINT
-                                                                )
-                                                            ); ?>
-
-                                                        </div>
-
-                                                    </div>
-
-
-                                                </div>
-
-
-                                            </div>
-
-
-                                            <div class="modal-footer">
-
-                                                <button type="button" class="btn btn-success fw-semibold" data-bs-dismiss="modal">
-
-                                                    Close
-
-                                                </button>
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-                            <?php endforeach; ?>
-
-
-                        <?php else: ?>
-
-
-                            <tr>
-
-                                <td colspan="7" class="text-center">
-
-                                    <div class="empty-state">
-
-                                        <i class="bi bi-journal-x d-block mb-3"></i>
-
-                                        <h6 class="fw-bold text-dark">
-
-                                            No audit logs found
-
-                                        </h6>
-
-                                        <p class="text-muted mb-0">
-
-                                            Administrative activity will appear here.
-
-                                        </p>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-
-                        <?php endif; ?>
-
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
         </div>
 
-    </div>
+    <?php endforeach; ?>
 
+<?php endif; ?>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>

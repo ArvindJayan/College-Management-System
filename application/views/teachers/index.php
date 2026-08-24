@@ -163,7 +163,6 @@
                             </button>
 
                             <a href="<?= site_url('teachers'); ?>" class="btn btn-outline-success text-nowrap fw-semibold">
-                                <i class="bi bi-x-circle me-1"></i>
                                 Reset
                             </a>
                         <?php endif; ?>

@@ -9,8 +9,9 @@ class Teacher_model extends CI_Model {
     }
 
     public function profile_exists($user_id) {
-        return $this->db->where('user_id', $user_id)
-                        ->count_all_results('teachers') > 0;
+        return $this->db
+            ->where('user_id', $user_id)
+            ->count_all_results('teachers') > 0;
     }
 
     public function create_teacher($data) {
@@ -28,7 +29,10 @@ class Teacher_model extends CI_Model {
         ');
         $this->db->from('teachers');
         $this->db->join('users', 'users.id = teachers.user_id');
-        $this->db->join('departments', 'departments.id = teachers.department_id');
+        $this->db->join(
+            'departments',
+            'departments.id = teachers.department_id'
+        );
         $this->db->where('teachers.id', $id);
 
         return $this->db->get()->row();
@@ -45,13 +49,19 @@ class Teacher_model extends CI_Model {
         ');
         $this->db->from('teachers');
         $this->db->join('users', 'users.id = teachers.user_id');
-        $this->db->join('departments', 'departments.id = teachers.department_id');
+        $this->db->join(
+            'departments',
+            'departments.id = teachers.department_id'
+        );
         $this->db->where('teachers.user_id', $user_id);
 
         return $this->db->get()->row();
     }
 
-    public function get_all_teachers($search = NULL, $department_id = NULL) {
+    public function get_all_teachers(
+        $search = NULL,
+        $department_id = NULL
+    ) {
         $this->db->select('
             teachers.*,
             users.name,
@@ -62,27 +72,50 @@ class Teacher_model extends CI_Model {
         ');
         $this->db->from('teachers');
         $this->db->join('users', 'users.id = teachers.user_id');
-        $this->db->join('departments', 'departments.id = teachers.department_id');
+        $this->db->join(
+            'departments',
+            'departments.id = teachers.department_id'
+        );
 
         if (!empty($search)) {
             $this->db->group_start();
             $this->db->like('users.name', $search);
             $this->db->or_like('users.email', $search);
-            $this->db->or_like('teachers.employee_code', $search);
-            $this->db->or_like('teachers.first_name', $search);
-            $this->db->or_like('teachers.last_name', $search);
-            $this->db->or_like('teachers.phone', $search);
-            $this->db->or_like('departments.name', $search);
+            $this->db->or_like(
+                'teachers.employee_code',
+                $search
+            );
+            $this->db->or_like(
+                'teachers.first_name',
+                $search
+            );
+            $this->db->or_like(
+                'teachers.last_name',
+                $search
+            );
+            $this->db->or_like(
+                'teachers.phone',
+                $search
+            );
+            $this->db->or_like(
+                'departments.name',
+                $search
+            );
             $this->db->group_end();
         }
 
         if (!empty($department_id)) {
-            $this->db->where('teachers.department_id', $department_id);
+            $this->db->where(
+                'teachers.department_id',
+                $department_id
+            );
         }
 
         $this->db->order_by('users.name', 'ASC');
 
-        return $this->db->get()->result();
+        return $this->db
+            ->get()
+            ->result();
     }
 
     public function get_departments() {
@@ -90,11 +123,14 @@ class Teacher_model extends CI_Model {
         $this->db->from('departments');
         $this->db->order_by('name', 'ASC');
 
-        return $this->db->get()->result();
+        return $this->db
+            ->get()
+            ->result();
     }
 
     public function get_teacher_count() {
-        return $this->db->count_all('teachers');
+        return $this->db
+            ->count_all('teachers');
     }
 
     public function update_teacher(
@@ -111,77 +147,59 @@ class Teacher_model extends CI_Model {
 
         $this->load->model('Audit_model');
 
-        $old_status = $teacher->status;
+        $old_values = [
+            'name' => $teacher->name,
+            'employee_code' => $teacher->employee_code,
+            'department_id' => $teacher->department_id,
+            'first_name' => $teacher->first_name,
+            'last_name' => $teacher->last_name,
+            'phone' => $teacher->phone,
+            'joining_date' => $teacher->joining_date
+        ];
 
-        $new_status = isset($user_data['status'])
-            ? $user_data['status']
-            : $old_status;
+        $new_values = [
+            'name' => isset($user_data['name'])
+                ? $user_data['name']
+                : $teacher->name,
+            'employee_code' => $teacher_data['employee_code'],
+            'department_id' => $teacher_data['department_id'],
+            'first_name' => $teacher_data['first_name'],
+            'last_name' => $teacher_data['last_name'],
+            'phone' => $teacher_data['phone'],
+            'joining_date' => $teacher_data['joining_date']
+        ];
 
-        unset($user_data['status']);
+        $changed_old_values = [];
+        $changed_new_values = [];
+
+        foreach ($old_values as $field => $old_value) {
+            if ((string)$old_value !== (string)$new_values[$field]) {
+                $changed_old_values[$field] = $old_value;
+                $changed_new_values[$field] = $new_values[$field];
+            }
+        }
 
         $this->db->trans_start();
-
 
         $this->db
             ->where('id', $id)
             ->update('teachers', $teacher_data);
 
-
         if (!empty($user_data)) {
-
             $this->db
                 ->where('id', $teacher->user_id)
                 ->update('users', $user_data);
         }
 
-        $old_values = [
-            'name'          => $teacher->name,
-            'employee_code' => $teacher->employee_code,
-            'department_id' => $teacher->department_id,
-            'first_name'    => $teacher->first_name,
-            'last_name'     => $teacher->last_name,
-            'phone'         => $teacher->phone,
-            'joining_date'  => $teacher->joining_date
-        ];
-
-        $new_values = array_merge(
-            $user_data,
-            $teacher_data
-        );
-
-        $this->Audit_model->log(
-            $actor_user_id,
-            'UPDATE_TEACHER',
-            'teachers',
-            $id,
-            $old_values,
-            $new_values,
-            'Teacher profile updated'
-        );
-
-        if ($old_status !== $new_status) {
-
-            $this->db
-                ->where('id', $teacher->user_id)
-                ->update('users', [
-                    'status' => $new_status
-                ]);
-
+        if (!empty($changed_old_values)) {
             $this->Audit_model->log(
                 $actor_user_id,
-                'CHANGE_STATUS',
+                'UPDATE_TEACHER',
                 'teachers',
                 $id,
-                [
-                    'status' => $old_status
-                ],
-                [
-                    'status' => $new_status
-                ],
-                'Teacher account status changed from '
-                . $old_status
-                . ' to '
-                . $new_status
+                $changed_old_values,
+                $changed_new_values,
+                'Teacher profile updated'
             );
         }
 
@@ -201,7 +219,11 @@ class Teacher_model extends CI_Model {
             return FALSE;
         }
 
-        if (!in_array($status, ['active', 'inactive'], TRUE)) {
+        if (!in_array(
+            $status,
+            ['active', 'inactive'],
+            TRUE
+        )) {
             return FALSE;
         }
 
@@ -215,9 +237,12 @@ class Teacher_model extends CI_Model {
 
         $this->db
             ->where('id', $teacher->user_id)
-            ->update('users', [
-                'status' => $status
-            ]);
+            ->update(
+                'users',
+                [
+                    'status' => $status
+                ]
+            );
 
         $this->Audit_model->log(
             $actor_user_id,

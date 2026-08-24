@@ -44,7 +44,6 @@ class Student_model extends CI_Model {
             courses.name as course_name,
             courses.code as course_code
         ');
-
         $this->db->from('students');
         $this->db->join('users', 'users.id = students.user_id');
         $this->db->join('courses', 'courses.id = students.course_id');
@@ -107,6 +106,38 @@ class Student_model extends CI_Model {
 
         unset($user_data['status']);
 
+        $old_values = [
+            'name' => $student->name,
+            'student_code' => $student->student_code,
+            'course_id' => $student->course_id,
+            'dob' => $student->dob,
+            'gender' => $student->gender,
+            'phone' => $student->phone,
+            'admission_date' => $student->admission_date
+        ];
+
+        $new_values = [
+            'name' => isset($user_data['name'])
+                ? $user_data['name']
+                : $student->name,
+            'student_code' => $student_data['student_code'],
+            'course_id' => $student_data['course_id'],
+            'dob' => $student_data['dob'],
+            'gender' => $student_data['gender'],
+            'phone' => $student_data['phone'],
+            'admission_date' => $student_data['admission_date']
+        ];
+
+        $changed_old_values = [];
+        $changed_new_values = [];
+
+        foreach ($old_values as $field => $old_value) {
+            if ((string)$old_value !== (string)$new_values[$field]) {
+                $changed_old_values[$field] = $old_value;
+                $changed_new_values[$field] = $new_values[$field];
+            }
+        }
+
         $this->db->trans_start();
 
         $this->db
@@ -114,50 +145,24 @@ class Student_model extends CI_Model {
             ->update('students', $student_data);
 
         if (!empty($user_data)) {
-
             $this->db
                 ->where('id', $student->user_id)
                 ->update('users', $user_data);
         }
 
-        $old_values = [
-            'name'           => $student->name,
-            'student_code'   => $student->student_code,
-            'course_id'      => $student->course_id,
-            'dob'            => $student->dob,
-            'gender'         => $student->gender,
-            'phone'          => $student->phone,
-            'admission_date' => $student->admission_date
-        ];
-
-        $new_values = [
-            'name'           => isset($user_data['name'])
-                ? $user_data['name']
-                : $student->name,
-
-            'student_code'   => $student_data['student_code'],
-            'course_id'      => $student_data['course_id'],
-            'dob'            => $student_data['dob'],
-            'gender'         => $student_data['gender'],
-            'phone'          => $student_data['phone'],
-            'admission_date' => $student_data['admission_date']
-        ];
-
-        if ($old_values != $new_values) {
-
+        if (!empty($changed_old_values)) {
             $this->Audit_model->log(
                 $actor_user_id,
                 'UPDATE_STUDENT',
                 'students',
                 $id,
-                $old_values,
-                $new_values,
+                $changed_old_values,
+                $changed_new_values,
                 'Student profile updated'
             );
         }
 
         if ($old_status !== $new_status) {
-
             $this->db
                 ->where('id', $student->user_id)
                 ->update('users', [

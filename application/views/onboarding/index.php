@@ -279,7 +279,7 @@
 
                             </label>
 
-                            <input type="tel" id="phone" name="phone" class="form-control" maxlength="20"
+                            <input type="tel" id="phone" name="phone" class="form-control" maxlength="10" minlength="10"
                                 value="<?= set_value('phone'); ?>" placeholder="Enter phone number">
 
                         </div>
@@ -301,14 +301,11 @@
 
                         <button type="submit" class="btn btn-success w-100 fw-semibold py-2">
 
-                            <i class="bi bi-check-circle me-2"></i>
-
                             Complete Teacher Profile
 
                         </button>
 
                     </form>
-
 
 
                 <?php elseif ($role_id === 4): ?>
@@ -438,7 +435,7 @@
 
                             </label>
 
-                            <input type="tel" id="phone" name="phone" class="form-control" maxlength="20"
+                            <input type="tel" id="phone" name="phone" class="form-control" maxlength="10"minlength="10"
                                 value="<?= set_value('phone'); ?>" placeholder="Enter phone number">
 
                         </div>
@@ -460,8 +457,6 @@
 
 
                         <button type="submit" class="btn btn-success w-100 fw-semibold py-2">
-
-                            <i class="bi bi-check-circle me-2"></i>
 
                             Complete Student Profile
 

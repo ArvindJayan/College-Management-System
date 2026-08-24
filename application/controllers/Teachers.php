@@ -21,31 +21,35 @@ class Teachers extends CI_Controller {
                 'error',
                 'Access denied. Teachers cannot access teacher directory management.'
             );
+
             redirect('dashboard');
         }
     }
 
     public function index() {
 
-        $search       = $this->input->get('search', TRUE);
+        $search = $this->input->get('search', TRUE);
         $department_id = $this->input->get('department_id', TRUE);
 
         $data['search'] = $search;
         $data['department_id'] = $department_id;
 
-        $data['departments'] = $this->Teacher_model->get_departments();
+        $data['departments'] =
+            $this->Teacher_model->get_departments();
 
-        $data['teachers'] = $this->Teacher_model->get_all_teachers(
-            $search,
-            $department_id
-        );
+        $data['teachers'] =
+            $this->Teacher_model->get_all_teachers(
+                $search,
+                $department_id
+            );
 
         $this->load->view('teachers/index', $data);
     }
 
     public function view_ajax($id) {
 
-        $teacher = $this->Teacher_model->get_teacher_by_id($id);
+        $teacher =
+            $this->Teacher_model->get_teacher_by_id($id);
 
         if ($teacher) {
 
@@ -72,9 +76,12 @@ class Teachers extends CI_Controller {
             );
 
             redirect('teachers');
+            return;
         }
 
-        $teacher = $this->Teacher_model->get_teacher_by_id($id);
+
+        $teacher =
+            $this->Teacher_model->get_teacher_by_id($id);
 
         if (!$teacher) {
 
@@ -84,6 +91,7 @@ class Teachers extends CI_Controller {
             );
 
             redirect('teachers');
+            return;
         }
 
         $this->form_validation->set_rules(
@@ -137,47 +145,148 @@ class Teachers extends CI_Controller {
         if ($this->form_validation->run() == FALSE) {
 
             $data['teacher'] = $teacher;
-            $data['departments'] = $this->Teacher_model->get_departments();
 
-            $this->load->view('teachers/edit', $data);
+            $data['departments'] =
+                $this->Teacher_model->get_departments();
+
+            $this->load->view(
+                'teachers/edit',
+                $data
+            );
+
+            return;
+        }
+
+        $new_status =
+            $this->input->post('status', TRUE);
+
+        $actor_user_id =
+            (int)$this->session->userdata('user_id');
+
+
+        $teacher_data = [
+            'employee_code' =>
+                $this->input->post(
+                    'employee_code',
+                    TRUE
+                ),
+
+            'department_id' =>
+                $this->input->post(
+                    'department_id',
+                    TRUE
+                ),
+
+            'first_name' =>
+                $this->input->post(
+                    'first_name',
+                    TRUE
+                ),
+
+            'last_name' =>
+                $this->input->post(
+                    'last_name',
+                    TRUE
+                ),
+
+            'phone' =>
+                $this->input->post(
+                    'phone',
+                    TRUE
+                ),
+
+            'joining_date' =>
+                $this->input->post(
+                    'joining_date',
+                    TRUE
+                )
+        ];
+
+        $user_data = [
+            'name' =>
+                $this->input->post(
+                    'name',
+                    TRUE
+                )
+        ];
+
+        $profile_changed = (
+            $teacher->name !==
+                $user_data['name']
+
+            ||
+
+            $teacher->employee_code !==
+                $teacher_data['employee_code']
+
+            ||
+
+            (int)$teacher->department_id !==
+                (int)$teacher_data['department_id']
+
+            ||
+
+            $teacher->first_name !==
+                $teacher_data['first_name']
+
+            ||
+
+            $teacher->last_name !==
+                $teacher_data['last_name']
+
+            ||
+
+            $teacher->phone !==
+                $teacher_data['phone']
+
+            ||
+
+            $teacher->joining_date !==
+                $teacher_data['joining_date']
+        );
+
+        $status_changed =
+            $teacher->status !== $new_status;
+
+        $success = TRUE;
+
+        if ($profile_changed) {
+
+            $success =
+                $this->Teacher_model->update_teacher(
+                    $id,
+                    $teacher_data,
+                    $user_data,
+                    $actor_user_id
+                );
+        }
+
+        if ($success && $status_changed) {
+
+            $success =
+                $this->Teacher_model->change_status(
+                    $id,
+                    $new_status,
+                    $actor_user_id
+                );
+        }
+
+        if ($success) {
+
+            $this->session->set_flashdata(
+                'success',
+                'Teacher profile updated successfully.'
+            );
 
         } else {
 
-            $teacher_data = [
-                'employee_code' => $this->input->post('employee_code', TRUE),
-                'department_id' => $this->input->post('department_id', TRUE),
-                'first_name'    => $this->input->post('first_name', TRUE),
-                'last_name'     => $this->input->post('last_name', TRUE),
-                'phone'         => $this->input->post('phone', TRUE),
-                'joining_date'  => $this->input->post('joining_date', TRUE)
-            ];
-            $user_data = [
-                'name' => $this->input->post('name', TRUE),
-                'status' => $this->input->post('status', TRUE)
-            ];
-
-            if ($this->Teacher_model->update_teacher(
-                $id,
-                $teacher_data,
-                $user_data,
-                (int)$this->session->userdata('user_id')
-            )) {
-
-                $this->session->set_flashdata(
-                    'success',
-                    'Teacher profile updated successfully.'
-                );
-
-            } else {
-
-                $this->session->set_flashdata(
-                    'error',
-                    'Failed to update teacher profile.'
-                );
-            }
-
-            redirect('teachers');
+            $this->session->set_flashdata(
+                'error',
+                'Failed to update teacher profile.'
+            );
         }
+
+        redirect('teachers');
     }
 
     public function change_status($id) {
@@ -203,9 +312,17 @@ class Teachers extends CI_Controller {
             return;
         }
 
-        $status = $this->input->post('status', TRUE);
+        $status =
+            $this->input->post(
+                'status',
+                TRUE
+            );
 
-        if (!in_array($status, ['active', 'inactive'], TRUE)) {
+        if (!in_array(
+            $status,
+            ['active', 'inactive'],
+            TRUE
+        )) {
 
             $this->session->set_flashdata(
                 'error',
@@ -219,17 +336,19 @@ class Teachers extends CI_Controller {
         $actor_user_id =
             (int)$this->session->userdata('user_id');
 
-        $result = $this->Teacher_model->change_status(
-            $id,
-            $status,
-            $actor_user_id
-        );
+        $result =
+            $this->Teacher_model->change_status(
+                $id,
+                $status,
+                $actor_user_id
+            );
 
         if ($result) {
 
-            $message = $status === 'active'
-                ? 'Teacher activated successfully.'
-                : 'Teacher deactivated successfully.';
+            $message =
+                $status === 'active'
+                    ? 'Teacher activated successfully.'
+                    : 'Teacher deactivated successfully.';
 
             $this->session->set_flashdata(
                 'success',
@@ -247,5 +366,3 @@ class Teachers extends CI_Controller {
         redirect('teachers');
     }
 }
-
-

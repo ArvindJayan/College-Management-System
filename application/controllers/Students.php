@@ -143,6 +143,12 @@ class Students extends CI_Controller {
             'required'
         );
 
+        $this->form_validation->set_rules(
+            'status',
+            'Account Status',
+            'required|in_list[active,inactive]'
+        );  
+
         if ($this->form_validation->run() == FALSE) {
 
             $data['student'] = $student;
@@ -164,14 +170,16 @@ class Students extends CI_Controller {
             ];
 
             $user_data = [
-                'name' => $this->input->post('name', TRUE)
+                'name' => $this->input->post('name', TRUE),
+                'status' => $this->input->post('status', TRUE)
             ];
 
             if ($this->Student_model->update_student(
                 $id,
                 $student_data,
                 $user_data,
-                (int)$this->session->userdata('user_id')
+                (int)$this->session->userdata('user_id'),
+
             )) {
 
                 $this->session->set_flashdata(
@@ -189,72 +197,5 @@ class Students extends CI_Controller {
 
             redirect('students');
         }
-    }
-
-    public function change_status($id) {
-        if ((int)$this->session->userdata('role_id') !== 1) {
-
-            $this->session->set_flashdata(
-                'error',
-                'Only Principals can change student status.'
-            );
-
-            redirect('students');
-            return;
-        }
-
-        if (!$this->input->post()) {
-
-            $this->session->set_flashdata(
-                'error',
-                'Invalid request.'
-            );
-
-            redirect('students');
-            return;
-        }
-
-        $status = $this->input->post('status', TRUE);
-
-        if (!in_array($status, ['active', 'inactive'], TRUE)) {
-
-            $this->session->set_flashdata(
-                'error',
-                'Invalid status.'
-            );
-
-            redirect('students');
-            return;
-        }
-
-        $actor_user_id =
-            (int)$this->session->userdata('user_id');
-
-        $result = $this->Student_model->change_status(
-            $id,
-            $status,
-            $actor_user_id
-        );
-
-        if ($result) {
-
-            $message = $status === 'active'
-                ? 'Student activated successfully.'
-                : 'Student deactivated successfully.';
-
-            $this->session->set_flashdata(
-                'success',
-                $message
-            );
-
-        } else {
-
-            $this->session->set_flashdata(
-                'error',
-                'Failed to change student status.'
-            );
-        }
-
-        redirect('students');
     }
 }

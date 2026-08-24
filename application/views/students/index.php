@@ -453,11 +453,6 @@
 
 
                                 <ul class="list-group list-group-flush border-top border-bottom my-3">
-                                
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <strong>Status:</strong>
-                                        <span>${student.status}</span>
-                                    </li>
 
                                     <li class="list-group-item d-flex justify-content-between">
                                         <strong>Student Code:</strong>
@@ -483,6 +478,11 @@
                                     <li class="list-group-item d-flex justify-content-between">
                                         <strong>Gender:</strong>
                                         <span>${student.gender}</span>
+                                    </li>
+
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <strong>Status:</strong>
+                                        <span>${student.status}</span>
                                     </li>
 
                                     <li class="list-group-item d-flex justify-content-between">

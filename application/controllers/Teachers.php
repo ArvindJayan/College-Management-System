@@ -146,7 +146,8 @@ class Teachers extends CI_Controller {
                 'joining_date'  => $this->input->post('joining_date', TRUE)
             ];
             $user_data = [
-                'name' => $this->input->post('name', TRUE)
+                'name' => $this->input->post('name', TRUE),
+                'status' => $this->input->post('status', TRUE)
             ];
 
             if ($this->Teacher_model->update_teacher(

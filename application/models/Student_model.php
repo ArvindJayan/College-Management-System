@@ -99,6 +99,14 @@ class Student_model extends CI_Model {
 
         $this->load->model('Audit_model');
 
+        $old_status = $student->status;
+
+        $new_status = isset($user_data['status'])
+            ? $user_data['status']
+            : $old_status;
+
+        unset($user_data['status']);
+
         $this->db->trans_start();
 
         $this->db
@@ -106,39 +114,73 @@ class Student_model extends CI_Model {
             ->update('students', $student_data);
 
         if (!empty($user_data)) {
+
             $this->db
                 ->where('id', $student->user_id)
                 ->update('users', $user_data);
         }
 
-        $old_values = array_merge(
-            [
-                'name' => $student->name
-            ],
-            [
-                'student_code'   => $student->student_code,
-                'course_id'      => $student->course_id,
-                'dob'            => $student->dob,
-                'gender'         => $student->gender,
-                'phone'          => $student->phone,
-                'admission_date' => $student->admission_date
-            ]
-        );
+        $old_values = [
+            'name'           => $student->name,
+            'student_code'   => $student->student_code,
+            'course_id'      => $student->course_id,
+            'dob'            => $student->dob,
+            'gender'         => $student->gender,
+            'phone'          => $student->phone,
+            'admission_date' => $student->admission_date
+        ];
 
-        $new_values = array_merge(
-            $user_data,
-            $student_data
-        );
+        $new_values = [
+            'name'           => isset($user_data['name'])
+                ? $user_data['name']
+                : $student->name,
 
-        $this->Audit_model->log(
-            $actor_user_id,
-            'UPDATE_STUDENT',
-            'students',
-            $id,
-            $old_values,
-            $new_values,
-            'Student profile updated'
-        );
+            'student_code'   => $student_data['student_code'],
+            'course_id'      => $student_data['course_id'],
+            'dob'            => $student_data['dob'],
+            'gender'         => $student_data['gender'],
+            'phone'          => $student_data['phone'],
+            'admission_date' => $student_data['admission_date']
+        ];
+
+        if ($old_values != $new_values) {
+
+            $this->Audit_model->log(
+                $actor_user_id,
+                'UPDATE_STUDENT',
+                'students',
+                $id,
+                $old_values,
+                $new_values,
+                'Student profile updated'
+            );
+        }
+
+        if ($old_status !== $new_status) {
+
+            $this->db
+                ->where('id', $student->user_id)
+                ->update('users', [
+                    'status' => $new_status
+                ]);
+
+            $this->Audit_model->log(
+                $actor_user_id,
+                'CHANGE_STATUS',
+                'students',
+                $id,
+                [
+                    'status' => $old_status
+                ],
+                [
+                    'status' => $new_status
+                ],
+                'Student account status changed from '
+                . $old_status
+                . ' to '
+                . $new_status
+            );
+        }
 
         $this->db->trans_complete();
 

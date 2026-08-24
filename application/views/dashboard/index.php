@@ -195,7 +195,7 @@
                                 <i class="bi bi-file-excel fs-1"></i>
                             </div>
                             <h5 class="fw-bold">
-                                Logs
+                                Audit Logs
                             </h5>
                             <p class="text-muted small">
                                 View detailed logs of all major updates

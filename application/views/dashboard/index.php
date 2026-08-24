@@ -200,7 +200,7 @@
                             <p class="text-muted small">
                                 View detailed logs of all major updates
                             </p>
-                            <a href="<?= site_url('/logs'); ?>" class="btn btn-outline-success w-100 mt-2 fw-semibold">
+                            <a href="<?= site_url('/audit'); ?>" class="btn btn-outline-success w-100 mt-2 fw-semibold">
                                 View Logs
                             </a>
                         </div>

@@ -35,4 +35,33 @@ class Audit_model extends CI_Model {
 
         return $this->db->insert('audit_logs', $data);
     }
+
+    public function get_all_logs() {
+        $this->db->select('
+            audit_logs.*,
+            users.name AS actor_name,
+            roles.name AS actor_role
+        ');
+
+        $this->db->from('audit_logs');
+
+        $this->db->join(
+            'users',
+            'users.id = audit_logs.actor_user_id',
+            'left'
+        );
+
+        $this->db->join(
+            'roles',
+            'roles.id = users.role_id',
+            'left'
+        );
+
+        $this->db->order_by(
+            'audit_logs.created_at',
+            'DESC'
+        );
+
+        return $this->db->get()->result();
+    }
 }

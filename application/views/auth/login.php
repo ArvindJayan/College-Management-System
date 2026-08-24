@@ -20,7 +20,7 @@
                 <div class="card-body p-4">
 
                     <?php if($this->session->flashdata('error')): ?>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <?= $this->session->flashdata('error'); ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>

@@ -101,4 +101,30 @@ class Auth extends CI_Controller {
         $this->session->sess_destroy();
         redirect('/');
     }
+
+    private function _redirect_authenticated_user() {
+        $user_id = $this->session->userdata('user_id');
+        $role_id = $this->session->userdata('role_id');
+
+        $this->load->model('Teacher_model');
+        $this->load->model('Student_model');
+
+        if ($role_id == 1) { 
+            redirect('dashboard');
+        } else if ($role_id == 2 || $role_id == 3) { 
+            if ($this->Teacher_model->profile_exists($user_id)) {
+                redirect('dashboard');
+            } else {
+                redirect('onboarding');
+            }
+        } else if ($role_id == 4) { 
+            if ($this->Student_model->profile_exists($user_id)) {
+                redirect('dashboard');
+            } else {
+                redirect('onboarding');
+            }
+        } else {
+            redirect('auth/login');
+        }
+    }
 }

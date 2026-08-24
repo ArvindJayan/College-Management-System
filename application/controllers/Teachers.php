@@ -46,6 +46,21 @@ class Teachers extends CI_Controller {
         $this->load->view('teachers/index', $data);
     }
 
+    public function search_ajax() {
+        $search = $this->input->get('search', TRUE);
+        $department_id = $this->input->get('department_id', TRUE);
+
+        $teachers = $this->Teacher_model->get_all_teachers(
+            $search,
+            $department_id
+        );
+
+        echo json_encode([
+            'status' => 'success',
+            'data' => $teachers
+        ]);
+    }
+
     public function view_ajax($id) {
 
         $teacher =

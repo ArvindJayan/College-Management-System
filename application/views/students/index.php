@@ -221,7 +221,7 @@
                                         <?php endif; ?>
                                     </td>
 
-                                    <td class="text-end pe-4">
+                                    <td class="d-flex text-end pe-4">
 
                                         <button class="btn btn-sm btn-outline-success me-1 btn-view-student fw-semibold"
                                             data-id="<?= $student->id; ?>"

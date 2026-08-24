@@ -1,9 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Students extends CI_Controller {
+class Students extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->library('session');
@@ -14,7 +16,7 @@ class Students extends CI_Controller {
             redirect('auth/login');
         }
 
-        $role_id = (int)$this->session->userdata('role_id');
+        $role_id = (int) $this->session->userdata('role_id');
 
         if ($role_id === 4) {
             $this->session->set_flashdata(
@@ -25,7 +27,8 @@ class Students extends CI_Controller {
         }
     }
 
-    public function index() {
+    public function index()
+    {
         $search = $this->input->get('search', TRUE);
         $course_id = $this->input->get('course_id', TRUE);
 
@@ -42,7 +45,7 @@ class Students extends CI_Controller {
             $filtered_students = [];
 
             foreach ($data['students'] as $student) {
-                if ((int)$student->course_id === (int)$course_id) {
+                if ((int) $student->course_id === (int) $course_id) {
                     $filtered_students[] = $student;
                 }
             }
@@ -53,7 +56,8 @@ class Students extends CI_Controller {
         $this->load->view('students/index', $data);
     }
 
-    public function search_ajax() {
+    public function search_ajax()
+    {
         $search = $this->input->get('search', TRUE);
         $course_id = $this->input->get('course_id', TRUE);
 
@@ -63,7 +67,7 @@ class Students extends CI_Controller {
             $filtered_students = [];
 
             foreach ($students as $student) {
-                if ((int)$student->course_id === (int)$course_id) {
+                if ((int) $student->course_id === (int) $course_id) {
                     $filtered_students[] = $student;
                 }
             }
@@ -79,7 +83,8 @@ class Students extends CI_Controller {
             ]));
     }
 
-    public function view_ajax($id) {
+    public function view_ajax($id)
+    {
         $student = $this->Student_model->get_student_by_id($id);
 
         if ($student) {
@@ -95,8 +100,9 @@ class Students extends CI_Controller {
         }
     }
 
-    public function edit($id) {
-        if ((int)$this->session->userdata('role_id') == 4) {
+    public function edit($id)
+    {
+        if ((int) $this->session->userdata('role_id') == 4) {
             $this->session->set_flashdata(
                 'error',
                 'Students cannot edit student records.'
@@ -186,12 +192,14 @@ class Students extends CI_Controller {
                 'status' => $this->input->post('status', TRUE)
             ];
 
-            if ($this->Student_model->update_student(
-                $id,
-                $student_data,
-                $user_data,
-                (int)$this->session->userdata('user_id')
-            )) {
+            if (
+                $this->Student_model->update_student(
+                    $id,
+                    $student_data,
+                    $user_data,
+                    (int) $this->session->userdata('user_id')
+                )
+            ) {
                 $this->session->set_flashdata(
                     'success',
                     'Student profile updated successfully.'

@@ -100,7 +100,7 @@ class Onboarding extends CI_Controller
         if ($this->form_validation->run() === FALSE) {
 
             $data = array(
-                'role_id'     => 3,
+                'role_id' => 3,
                 'departments' => $this->Department_model->get_all_departments()
             );
 
@@ -110,13 +110,13 @@ class Onboarding extends CI_Controller
         }
 
         $teacher_data = array(
-            'user_id'       => $user_id,
+            'user_id' => $user_id,
             'department_id' => $this->input->post('department_id', TRUE),
             'employee_code' => $this->input->post('employee_code', TRUE),
-            'first_name'    => $this->input->post('first_name', TRUE),
-            'last_name'     => $this->input->post('last_name', TRUE),
-            'phone'         => $this->input->post('phone', TRUE),
-            'joining_date'  => $this->input->post('joining_date', TRUE)
+            'first_name' => $this->input->post('first_name', TRUE),
+            'last_name' => $this->input->post('last_name', TRUE),
+            'phone' => $this->input->post('phone', TRUE),
+            'joining_date' => $this->input->post('joining_date', TRUE)
         );
 
         if ($this->Teacher_model->create_teacher($teacher_data)) {
@@ -132,7 +132,7 @@ class Onboarding extends CI_Controller
         }
 
         $data = array(
-            'role_id'     => 3,
+            'role_id' => 3,
             'departments' => $this->Department_model->get_all_departments()
         );
 
@@ -195,12 +195,12 @@ class Onboarding extends CI_Controller
         }
 
         $student_data = array(
-            'user_id'        => $user_id,
-            'course_id'      => $this->input->post('course_id', TRUE),
-            'student_code'   => $this->input->post('student_code', TRUE),
-            'dob'            => $this->input->post('dob', TRUE),
-            'gender'         => $this->input->post('gender', TRUE),
-            'phone'          => $this->input->post('phone', TRUE),
+            'user_id' => $user_id,
+            'course_id' => $this->input->post('course_id', TRUE),
+            'student_code' => $this->input->post('student_code', TRUE),
+            'dob' => $this->input->post('dob', TRUE),
+            'gender' => $this->input->post('gender', TRUE),
+            'phone' => $this->input->post('phone', TRUE),
             'admission_date' => $this->input->post('admission_date', TRUE)
         );
 

@@ -1,24 +1,29 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Teacher_model extends CI_Model {
+class Teacher_model extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
-    public function profile_exists($user_id) {
+    public function profile_exists($user_id)
+    {
         return $this->db
             ->where('user_id', $user_id)
             ->count_all_results('teachers') > 0;
     }
 
-    public function create_teacher($data) {
+    public function create_teacher($data)
+    {
         return $this->db->insert('teachers', $data);
     }
 
-    public function get_teacher_by_id($id) {
+    public function get_teacher_by_id($id)
+    {
         $this->db->select('
             teachers.*,
             users.name,
@@ -38,7 +43,8 @@ class Teacher_model extends CI_Model {
         return $this->db->get()->row();
     }
 
-    public function get_teacher_by_user_id($user_id) {
+    public function get_teacher_by_user_id($user_id)
+    {
         $this->db->select('
             teachers.*,
             users.name,
@@ -118,7 +124,8 @@ class Teacher_model extends CI_Model {
             ->result();
     }
 
-    public function get_departments() {
+    public function get_departments()
+    {
         $this->db->select('id, name, code');
         $this->db->from('departments');
         $this->db->order_by('name', 'ASC');
@@ -128,7 +135,8 @@ class Teacher_model extends CI_Model {
             ->result();
     }
 
-    public function get_teacher_count() {
+    public function get_teacher_count()
+    {
         return $this->db
             ->count_all('teachers');
     }
@@ -173,7 +181,7 @@ class Teacher_model extends CI_Model {
         $changed_new_values = [];
 
         foreach ($old_values as $field => $old_value) {
-            if ((string)$old_value !== (string)$new_values[$field]) {
+            if ((string) $old_value !== (string) $new_values[$field]) {
                 $changed_old_values[$field] = $old_value;
                 $changed_new_values[$field] = $new_values[$field];
             }
@@ -219,11 +227,13 @@ class Teacher_model extends CI_Model {
             return FALSE;
         }
 
-        if (!in_array(
-            $status,
-            ['active', 'inactive'],
-            TRUE
-        )) {
+        if (
+            !in_array(
+                $status,
+                ['active', 'inactive'],
+                TRUE
+            )
+        ) {
             return FALSE;
         }
 

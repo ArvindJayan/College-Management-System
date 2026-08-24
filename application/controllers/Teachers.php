@@ -1,9 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Teachers extends CI_Controller {
+class Teachers extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->library('session');
@@ -14,7 +16,7 @@ class Teachers extends CI_Controller {
             redirect('auth/login');
         }
 
-        $role_id = (int)$this->session->userdata('role_id');
+        $role_id = (int) $this->session->userdata('role_id');
 
         if ($role_id === 3) {
             $this->session->set_flashdata(
@@ -26,7 +28,8 @@ class Teachers extends CI_Controller {
         }
     }
 
-    public function index() {
+    public function index()
+    {
 
         $search = $this->input->get('search', TRUE);
         $department_id = $this->input->get('department_id', TRUE);
@@ -46,7 +49,8 @@ class Teachers extends CI_Controller {
         $this->load->view('teachers/index', $data);
     }
 
-    public function search_ajax() {
+    public function search_ajax()
+    {
         $search = $this->input->get('search', TRUE);
         $department_id = $this->input->get('department_id', TRUE);
 
@@ -61,7 +65,8 @@ class Teachers extends CI_Controller {
         ]);
     }
 
-    public function view_ajax($id) {
+    public function view_ajax($id)
+    {
 
         $teacher =
             $this->Teacher_model->get_teacher_by_id($id);
@@ -70,20 +75,21 @@ class Teachers extends CI_Controller {
 
             echo json_encode([
                 'status' => 'success',
-                'data'   => $teacher
+                'data' => $teacher
             ]);
 
         } else {
 
             echo json_encode([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'Teacher record not found.'
             ]);
         }
     }
 
-    public function edit($id) {
-        if ((int)$this->session->userdata('role_id') !== 1) {
+    public function edit($id)
+    {
+        if ((int) $this->session->userdata('role_id') !== 1) {
 
             $this->session->set_flashdata(
                 'error',
@@ -176,7 +182,7 @@ class Teachers extends CI_Controller {
             $this->input->post('status', TRUE);
 
         $actor_user_id =
-            (int)$this->session->userdata('user_id');
+            (int) $this->session->userdata('user_id');
 
 
         $teacher_data = [
@@ -227,37 +233,37 @@ class Teachers extends CI_Controller {
 
         $profile_changed = (
             $teacher->name !==
-                $user_data['name']
+            $user_data['name']
 
             ||
 
             $teacher->employee_code !==
-                $teacher_data['employee_code']
+            $teacher_data['employee_code']
 
             ||
 
-            (int)$teacher->department_id !==
-                (int)$teacher_data['department_id']
+            (int) $teacher->department_id !==
+            (int) $teacher_data['department_id']
 
             ||
 
             $teacher->first_name !==
-                $teacher_data['first_name']
+            $teacher_data['first_name']
 
             ||
 
             $teacher->last_name !==
-                $teacher_data['last_name']
+            $teacher_data['last_name']
 
             ||
 
             $teacher->phone !==
-                $teacher_data['phone']
+            $teacher_data['phone']
 
             ||
 
             $teacher->joining_date !==
-                $teacher_data['joining_date']
+            $teacher_data['joining_date']
         );
 
         $status_changed =
@@ -304,8 +310,9 @@ class Teachers extends CI_Controller {
         redirect('teachers');
     }
 
-    public function change_status($id) {
-        if ((int)$this->session->userdata('role_id') !== 1) {
+    public function change_status($id)
+    {
+        if ((int) $this->session->userdata('role_id') !== 1) {
 
             $this->session->set_flashdata(
                 'error',
@@ -333,11 +340,13 @@ class Teachers extends CI_Controller {
                 TRUE
             );
 
-        if (!in_array(
-            $status,
-            ['active', 'inactive'],
-            TRUE
-        )) {
+        if (
+            !in_array(
+                $status,
+                ['active', 'inactive'],
+                TRUE
+            )
+        ) {
 
             $this->session->set_flashdata(
                 'error',
@@ -349,7 +358,7 @@ class Teachers extends CI_Controller {
         }
 
         $actor_user_id =
-            (int)$this->session->userdata('user_id');
+            (int) $this->session->userdata('user_id');
 
         $result =
             $this->Teacher_model->change_status(
@@ -362,8 +371,8 @@ class Teachers extends CI_Controller {
 
             $message =
                 $status === 'active'
-                    ? 'Teacher activated successfully.'
-                    : 'Teacher deactivated successfully.';
+                ? 'Teacher activated successfully.'
+                : 'Teacher deactivated successfully.';
 
             $this->session->set_flashdata(
                 'success',

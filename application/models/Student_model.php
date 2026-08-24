@@ -1,23 +1,28 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Student_model extends CI_Model {
+class Student_model extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
-    public function profile_exists($user_id) {
+    public function profile_exists($user_id)
+    {
         $query = $this->db->get_where('students', ['user_id' => $user_id]);
         return $query->num_rows() > 0;
     }
 
-    public function create_student($data) {
+    public function create_student($data)
+    {
         return $this->db->insert('students', $data);
     }
 
-    public function get_student_by_user_id($user_id) {
+    public function get_student_by_user_id($user_id)
+    {
         $this->db->select('
             students.*,
             users.name,
@@ -34,7 +39,8 @@ class Student_model extends CI_Model {
         return $this->db->get()->row();
     }
 
-    public function get_student_by_id($id) {
+    public function get_student_by_id($id)
+    {
         $this->db->select('
             students.*,
             users.name,
@@ -52,7 +58,8 @@ class Student_model extends CI_Model {
         return $this->db->get()->row();
     }
 
-    public function get_all_students($search = NULL) {
+    public function get_all_students($search = NULL)
+    {
         $this->db->select('
             students.*,
             users.name,
@@ -80,7 +87,8 @@ class Student_model extends CI_Model {
         return $this->db->get()->result();
     }
 
-    public function get_student_count() {
+    public function get_student_count()
+    {
         return $this->db->count_all('students');
     }
 
@@ -132,7 +140,7 @@ class Student_model extends CI_Model {
         $changed_new_values = [];
 
         foreach ($old_values as $field => $old_value) {
-            if ((string)$old_value !== (string)$new_values[$field]) {
+            if ((string) $old_value !== (string) $new_values[$field]) {
                 $changed_old_values[$field] = $old_value;
                 $changed_new_values[$field] = $new_values[$field];
             }

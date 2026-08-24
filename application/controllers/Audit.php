@@ -15,7 +15,7 @@ class Audit extends CI_Controller
             return;
         }
 
-        $role_id = (int)$this->session->userdata('role_id');
+        $role_id = (int) $this->session->userdata('role_id');
 
         if ($role_id !== 1) {
             $this->session->set_flashdata(
@@ -32,7 +32,7 @@ class Audit extends CI_Controller
     {
         $per_page = 10;
 
-        $page = (int)$this->input->get('page');
+        $page = (int) $this->input->get('page');
 
         if ($page < 1) {
             $page = 1;
@@ -40,7 +40,7 @@ class Audit extends CI_Controller
 
         $total_logs = $this->Audit_model->get_log_count();
 
-        $total_pages = (int)ceil(
+        $total_pages = (int) ceil(
             $total_logs / $per_page
         );
 

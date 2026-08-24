@@ -36,7 +36,11 @@ class Audit_model extends CI_Model {
         return $this->db->insert('audit_logs', $data);
     }
 
-    public function get_all_logs() {
+    public function get_log_count() {
+        return $this->db->count_all('audit_logs');
+    }
+
+    public function get_logs($limit, $offset) {
         $this->db->select('
             audit_logs.*,
             users.name as actor_name,
@@ -61,6 +65,8 @@ class Audit_model extends CI_Model {
             'audit_logs.created_at',
             'DESC'
         );
+
+        $this->db->limit($limit, $offset);
 
         return $this->db->get()->result();
     }

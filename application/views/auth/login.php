@@ -17,6 +17,7 @@
                     <h4 class="mb-0 fw-bold"><i class="bi bi-book-half me-2"></i>CMS Portal</h4>
                     <small>Sign in to your account</small>
                 </div>
+
                 <div class="card-body p-4">
 
                     <?php if($this->session->flashdata('error')): ?>
@@ -26,31 +27,66 @@
                         </div>
                     <?php endif; ?>
 
-                    <form action="<?= site_url('auth/login'); ?>" method="POST">
+                    <form id="loginForm" action="<?= site_url('auth/login'); ?>" method="POST">
+
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Email Address</label>
+                            <label for="email" class="form-label text-secondary fw-semibold">
+                                Email Address
+                            </label>
+
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                <input type="email" name="email" class="form-control focus-ring focus-ring-success" placeholder="Enter your email" required>
+                                <span class="input-group-text">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="form-control focus-ring focus-ring-success"
+                                    placeholder="Enter your email"
+                                    autocomplete="email"
+                                    required
+                                >
                             </div>
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label text-secondary fw-semibold">Password</label>
+                            <label for="password" class="form-label text-secondary fw-semibold">
+                                Password
+                            </label>
+
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                <input type="password" name="password" placeholder="Enter your password" class="form-control focus-ring focus-ring-success outline-success" required>
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock"></i>
+                                </span>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Enter your password"
+                                    class="form-control focus-ring focus-ring-success outline-success"
+                                    autocomplete="current-password"
+                                    required
+                                >
                             </div>
                         </div>
 
                         <button type="submit" class="btn btn-success w-100 fw-bold py-2">
-                            Sign In 
+                            Sign In
                         </button>
+
                     </form>
                 </div>
+
                 <div class="card-footer bg-white text-center py-3">
                     <span class="small text-muted">Don't have an account?</span>
-                    <a href="<?= site_url('/auth/register'); ?>" class="text-success fw-semibold small text-decoration-none ms-1">
+
+                    <a
+                        href="<?= site_url('/auth/register'); ?>"
+                        class="text-success fw-semibold small text-decoration-none ms-1"
+                    >
                         Register
                     </a>
                 </div>
@@ -60,5 +96,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?= base_url('application/assets/js/validation.js'); ?>"></script>
+<script src="<?= base_url('application/assets/js/login.js'); ?>"></script>
+
 </body>
 </html>

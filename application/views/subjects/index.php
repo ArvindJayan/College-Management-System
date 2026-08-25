@@ -185,10 +185,10 @@
             <div>
 
                 <a
-                    href="<?= site_url('/courses'); ?>"
+                    href="<?= site_url('/dashboard'); ?>"
                     class="btn btn-outline-success fw-semibold">
 
-                    Back to Courses
+                    Back to Dashboard
 
                 </a>
 
@@ -197,7 +197,6 @@
         </div>
 
 
-        <!-- Subjects -->
 
         <div
             class="card border-0 shadow-sm rounded-3">

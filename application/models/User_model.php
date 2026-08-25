@@ -72,6 +72,13 @@ class User_model extends CI_Model
         return $query->result();
     }
 
+    public function role_exists($role_id)
+    {
+        return $this->db
+            ->where('id', $role_id)
+            ->count_all_results('roles') > 0;
+    }
+
     public function get_profile($user_id)
     {
         $user = $this->db

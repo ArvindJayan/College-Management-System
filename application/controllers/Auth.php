@@ -20,7 +20,7 @@ class Auth extends CI_Controller
 
         $this->form_validation->set_rules('name', 'name', 'required|trim');
         $this->form_validation->set_rules('email', 'Email Address', 'required|trim|valid_email|is_unique[users.email]');
-        $this->form_validation->set_rules('role_id', 'Role', 'required|numeric');
+        $this->form_validation->set_rules('role_id', 'Role', 'required|numeric|callback_valid_role');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
         $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|matches[password]');
 
@@ -42,7 +42,7 @@ class Auth extends CI_Controller
             $this->session->set_flashdata('error', 'Principal registration is restricted.');
             redirect('auth/register');
             return;
-        }
+        } 
 
         $user_data = array(
             'name' => $this->input->post('name', TRUE),
@@ -133,6 +133,21 @@ class Auth extends CI_Controller
     {
         $this->session->sess_destroy();
         redirect('/');
+    }
+
+    public function valid_role($role_id)
+    {
+        if ($role_id == 1) {
+            $this->form_validation->set_message('valid_role', 'Principal registration is restricted.');
+            return FALSE;
+        }
+
+        if (!$this->User_model->role_exists($role_id)) {
+            $this->form_validation->set_message('valid_role', 'Invalid role selected.');
+            return FALSE;
+        }
+
+        return TRUE;
     }
 
     private function _redirect_authenticated_user()

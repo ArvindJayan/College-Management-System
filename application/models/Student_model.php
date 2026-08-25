@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Student_model extends CI_Model
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -29,17 +28,20 @@ class Student_model extends CI_Model
             users.email,
             users.created_at as registered_since,
             courses.name as course_name,
-            courses.code as course_code
+            courses.code as course_code,
+            departments.name as department_name,
+            departments.code as department_code
         ');
         $this->db->from('students');
         $this->db->join('users', 'users.id = students.user_id');
         $this->db->join('courses', 'courses.id = students.course_id');
+        $this->db->join('departments', 'departments.id = courses.department_id');
         $this->db->where('students.user_id', $user_id);
 
         return $this->db->get()->row();
     }
 
-    public function get_student_by_id($id)
+    public function get_student_by_id($id, $role_id = NULL, $user_id = NULL)
     {
         $this->db->select('
             students.*,
@@ -48,29 +50,64 @@ class Student_model extends CI_Model
             users.status,
             users.created_at as registered_since,
             courses.name as course_name,
-            courses.code as course_code
+            courses.code as course_code,
+            departments.name as department_name,
+            departments.code as department_code
         ');
         $this->db->from('students');
         $this->db->join('users', 'users.id = students.user_id');
         $this->db->join('courses', 'courses.id = students.course_id');
+        $this->db->join('departments', 'departments.id = courses.department_id');
+
+        if ($role_id === 3) {
+            $this->db->join(
+                'teachers',
+                'teachers.user_id = ' . (int) $user_id
+            );
+            $this->db->where(
+                'courses.department_id = teachers.department_id'
+            );
+        }
+
         $this->db->where('students.id', $id);
 
         return $this->db->get()->row();
     }
 
-    public function get_all_students($search = NULL)
-    {
+    public function get_all_students(
+        $search = NULL,
+        $role_id = NULL,
+        $user_id = NULL,
+        $course_id = NULL
+    ) {
         $this->db->select('
             students.*,
             users.name,
             users.email,
             users.status,
             courses.name as course_name,
-            courses.code as course_code
+            courses.code as course_code,
+            departments.name as department_name,
+            departments.code as department_code
         ');
         $this->db->from('students');
         $this->db->join('users', 'users.id = students.user_id');
         $this->db->join('courses', 'courses.id = students.course_id');
+        $this->db->join('departments', 'departments.id = courses.department_id');
+
+        if ($role_id === 3) {
+            $this->db->join(
+                'teachers',
+                'teachers.user_id = ' . (int) $user_id
+            );
+            $this->db->where(
+                'courses.department_id = teachers.department_id'
+            );
+        }
+
+        if (!empty($course_id)) {
+            $this->db->where('students.course_id', $course_id);
+        }
 
         if (!empty($search)) {
             $this->db->group_start();
@@ -96,9 +133,14 @@ class Student_model extends CI_Model
         $id,
         $student_data,
         $user_data = [],
-        $actor_user_id
+        $actor_user_id,
+        $role_id = NULL
     ) {
-        $student = $this->get_student_by_id($id);
+        $student = $this->get_student_by_id(
+            $id,
+            $role_id,
+            $actor_user_id
+        );
 
         if (!$student) {
             return FALSE;

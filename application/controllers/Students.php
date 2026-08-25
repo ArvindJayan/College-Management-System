@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Students extends CI_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -31,6 +30,8 @@ class Students extends CI_Controller
     {
         $search = $this->input->get('search', TRUE);
         $course_id = $this->input->get('course_id', TRUE);
+        $role_id = (int) $this->session->userdata('role_id');
+        $user_id = (int) $this->session->userdata('user_id');
 
         $data['search'] = $search;
         $data['course_id'] = $course_id;
@@ -38,20 +39,12 @@ class Students extends CI_Controller
         $this->load->model('Course_model');
 
         $data['courses'] = $this->Course_model->get_all_courses();
-
-        $data['students'] = $this->Student_model->get_all_students($search);
-
-        if (!empty($course_id)) {
-            $filtered_students = [];
-
-            foreach ($data['students'] as $student) {
-                if ((int) $student->course_id === (int) $course_id) {
-                    $filtered_students[] = $student;
-                }
-            }
-
-            $data['students'] = $filtered_students;
-        }
+        $data['students'] = $this->Student_model->get_all_students(
+            $search,
+            $role_id,
+            $user_id,
+            $course_id
+        );
 
         $this->load->view('students/index', $data);
     }
@@ -60,20 +53,15 @@ class Students extends CI_Controller
     {
         $search = $this->input->get('search', TRUE);
         $course_id = $this->input->get('course_id', TRUE);
+        $role_id = (int) $this->session->userdata('role_id');
+        $user_id = (int) $this->session->userdata('user_id');
 
-        $students = $this->Student_model->get_all_students($search);
-
-        if (!empty($course_id)) {
-            $filtered_students = [];
-
-            foreach ($students as $student) {
-                if ((int) $student->course_id === (int) $course_id) {
-                    $filtered_students[] = $student;
-                }
-            }
-
-            $students = $filtered_students;
-        }
+        $students = $this->Student_model->get_all_students(
+            $search,
+            $role_id,
+            $user_id,
+            $course_id
+        );
 
         $this->output
             ->set_content_type('application/json')
@@ -85,40 +73,56 @@ class Students extends CI_Controller
 
     public function view_ajax($id)
     {
-        $student = $this->Student_model->get_student_by_id($id);
+        $role_id = (int) $this->session->userdata('role_id');
+        $user_id = (int) $this->session->userdata('user_id');
+
+        $student = $this->Student_model->get_student_by_id(
+            $id,
+            $role_id,
+            $user_id
+        );
 
         if ($student) {
-            echo json_encode([
-                'status' => 'success',
-                'data' => $student
-            ]);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'status' => 'success',
+                    'data' => $student
+                ]));
         } else {
-            echo json_encode([
-                'status' => 'error',
-                'message' => 'Student record not found.'
-            ]);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'status' => 'error',
+                    'message' => 'Student record not found.'
+                ]));
         }
     }
 
     public function edit($id)
     {
-        if ((int) $this->session->userdata('role_id') == 4) {
+        $role_id = (int) $this->session->userdata('role_id');
+        $user_id = (int) $this->session->userdata('user_id');
+
+        if ($role_id === 4) {
             $this->session->set_flashdata(
                 'error',
                 'Students cannot edit student records.'
             );
-
             redirect('students');
         }
 
-        $student = $this->Student_model->get_student_by_id($id);
+        $student = $this->Student_model->get_student_by_id(
+            $id,
+            $role_id,
+            $user_id
+        );
 
         if (!$student) {
             $this->session->set_flashdata(
                 'error',
-                'Student not found.'
+                'Student not found or access denied.'
             );
-
             redirect('students');
         }
 
@@ -197,7 +201,8 @@ class Students extends CI_Controller
                     $id,
                     $student_data,
                     $user_data,
-                    (int) $this->session->userdata('user_id')
+                    $user_id,
+                    $role_id
                 )
             ) {
                 $this->session->set_flashdata(

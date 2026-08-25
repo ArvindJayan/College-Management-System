@@ -118,8 +118,6 @@
                         ); ?>" method="POST">
 
 
-                            <!-- Department -->
-
                             <div class="mb-3">
 
                                 <label for="department_id" class="form-label fw-semibold">
@@ -169,9 +167,6 @@
 
                             </div>
 
-
-                            <!-- Course Name -->
-
                             <div class="mb-3">
 
                                 <label for="name" class="form-label fw-semibold">
@@ -188,8 +183,6 @@
                             </div>
 
 
-                            <!-- Course Code -->
-
                             <div class="mb-3">
 
                                 <label for="code" class="form-label fw-semibold">
@@ -204,9 +197,6 @@
                                 ); ?>" required>
 
                             </div>
-
-
-                            <!-- Duration -->
 
                             <div class="mb-4">
 

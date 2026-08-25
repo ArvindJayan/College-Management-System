@@ -131,8 +131,6 @@
     <div class="container py-5">
 
 
-        <!-- Page Header -->
-
         <div class="d-flex justify-content-between align-items-center mb-4">
 
             <div>
@@ -168,8 +166,6 @@
         </div>
 
 
-        <!-- Success Message -->
-
         <?php if (
             $this->session->flashdata('success')
         ): ?>
@@ -188,9 +184,6 @@
             </div>
 
         <?php endif; ?>
-
-
-        <!-- Error Message -->
 
         <?php if (
             $this->session->flashdata('error')
@@ -211,8 +204,6 @@
 
         <?php endif; ?>
 
-
-        <!-- Account Information -->
 
         <div class="card border-0 shadow-sm rounded-3 mb-4">
 
@@ -380,8 +371,6 @@
 
         </div>
 
-
-        <!-- Student Information -->
 
         <?php if ($user->student): ?>
 
@@ -620,8 +609,6 @@
 
         <?php endif; ?>
 
-
-        <!-- Teacher Information -->
 
         <?php if ($user->teacher): ?>
 

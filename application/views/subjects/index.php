@@ -23,9 +23,6 @@
 
 <body class="bg-light">
 
-
-    <!-- Navbar -->
-
     <nav
         class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm sticky-top">
 
@@ -162,9 +159,6 @@
 
 
     <div class="container py-5">
-
-
-        <!-- Page Header -->
 
         <div
             class="d-flex justify-content-between align-items-center mb-4">

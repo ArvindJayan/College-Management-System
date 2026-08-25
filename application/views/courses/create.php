@@ -116,8 +116,6 @@
                         <form action="<?= site_url('courses/create'); ?>" method="POST">
 
 
-                            <!-- Department -->
-
                             <div class="mb-3">
 
                                 <label for="department_id" class="form-label fw-semibold">
@@ -165,9 +163,6 @@
 
                             </div>
 
-
-                            <!-- Course Name -->
-
                             <div class="mb-3">
 
                                 <label for="name" class="form-label fw-semibold">
@@ -180,9 +175,6 @@
                                     value="<?= set_value('name'); ?>" placeholder="e.g. Computer Engineering" required>
 
                             </div>
-
-
-                            <!-- Course Code -->
 
                             <div class="mb-3">
 
@@ -198,7 +190,6 @@
                             </div>
 
 
-                            <!-- Duration -->
 
                             <div class="mb-4">
 

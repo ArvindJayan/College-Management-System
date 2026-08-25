@@ -264,8 +264,6 @@
 
                 </div>
 
-
-                <!-- Footer -->
                 <div class="card-footer bg-white text-center py-3">
 
                     <span class="small text-muted">

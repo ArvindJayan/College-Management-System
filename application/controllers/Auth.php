@@ -38,12 +38,6 @@ class Auth extends CI_Controller
 
         $selected_role_id = (int) $this->input->post('role_id', TRUE);
 
-        if ($selected_role_id === 1) {
-            $this->session->set_flashdata('error', 'Principal registration is restricted.');
-            redirect('auth/register');
-            return;
-        } 
-
         $user_data = array(
             'name' => $this->input->post('name', TRUE),
             'email' => $this->input->post('email', TRUE),
@@ -138,12 +132,11 @@ class Auth extends CI_Controller
     public function valid_role($role_id)
     {
         if ($role_id == 1) {
-            $this->form_validation->set_message('valid_role', 'Principal registration is restricted.');
-            return FALSE;
+            $this->session->set_flashdata('error', 'Principal registration is restricted.');            return FALSE;
         }
 
         if (!$this->User_model->role_exists($role_id)) {
-            $this->form_validation->set_message('valid_role', 'Invalid role selected.');
+            $this->session->set_flashdata('error', 'Invalid role selected.');
             return FALSE;
         }
 

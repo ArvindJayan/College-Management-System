@@ -1,4 +1,3 @@
-````markdown
 # College Management System
 
 A role-based **College Management System** built with **PHP, CodeIgniter 3, MySQL, Bootstrap 5, and JavaScript**. The system provides separate functionality and access levels for Principals, HODs, Teachers, and Students.
@@ -7,69 +6,70 @@ A role-based **College Management System** built with **PHP, CodeIgniter 3, MySQ
 
 ### Authentication & Authorization
 
-- User authentication and session management
-- Role-based access control
-- Four user roles:
-  - Principal
-  - HOD
-  - Teacher
-  - Student
-- Restricted access to modules based on user role
-- Active/inactive account status management
+* User authentication and session management
+* Role-based access control
+* Four user roles:
+
+  * Principal
+  * HOD
+  * Teacher
+  * Student
+* Restricted access to modules based on user role
+* Active/inactive account status management
 
 ### Dashboard
 
 The dashboard dynamically displays modules based on the logged-in user's role.
 
-| Module | Principal | HOD | Teacher | Student |
-|---|:---:|:---:|:---:|:---:|
-| Teacher Management | ✓ | ✓ | - | - |
-| Student Management | ✓ | ✓ | ✓ | - |
-| Course Management | ✓ | ✓ | ✓ | ✓ |
-| Subject Management | - | - | - | ✓ |
-| Attendance Management | - | - | ✓ | ✓ |
-| Audit Logs | ✓ | - | - | - |
+| Module                | Principal | HOD | Teacher | Student |
+| --------------------- | :-------: | :-: | :-----: | :-----: |
+| Teacher Management    |     ✓     |  ✓  |    -    |    -    |
+| Student Management    |     ✓     |  ✓  |    ✓    |    -    |
+| Course Management     |     ✓     |  ✓  |    ✓    |    ✓    |
+| Subject Management    |     -     |  -  |    -    |    ✓    |
+| Attendance Management |     -     |  -  |    ✓    |    ✓    |
+| Audit Logs            |     ✓     |  -  |    -    |    -    |
 
 ### Teacher Management
 
-- View teacher profiles
-- Search teachers
-- Filter teachers by department
-- Edit teacher information
-- Manage teacher account status
-- Department-based teacher organization
-- Principal-only teacher editing
+* View teacher profiles
+* Search teachers
+* Filter teachers by department
+* Edit teacher information
+* Manage teacher account status
+* Department-based teacher organization
+* Principal-only teacher editing
 
 ### Student Management
 
-- View student profiles
-- Search students
-- Filter students by course
-- Edit student information
-- Manage student account status
-- Department-based access for teachers
-- Principal and HOD access to all students
-- Teachers can only access students belonging to their department
+* View student profiles
+* Search students
+* Filter students by course
+* Edit student information
+* Manage student account status
+* Department-based access for teachers
+* Principal and HOD access to all students
+* Teachers can only access students belonging to their department
 
 ### Course Management
 
-- View courses
-- Manage course information
-- Associate courses with departments
-- Define course duration
+* View courses
+* Manage course information
+* Associate courses with departments
+* Define course duration
 
 ### Subject Management
 
-- View subjects
-- Associate subjects with courses
-- Store semester and credit information
+* View subjects
+* Associate subjects with courses
+* Store semester and credit information
 
 ### Attendance Management
 
-- Mark student attendance
-- View attendance records
-- Track attendance by student and subject
-- Prevent duplicate attendance records for the same student, subject, and date
+* Mark student attendance
+* View attendance records
+* Track attendance by student and subject
+* Prevent duplicate attendance records for the same student, subject, and date
 
 ### Audit Logging
 
@@ -77,16 +77,16 @@ The system maintains audit logs for important operations.
 
 Logged information includes:
 
-- User who performed the action
-- Action performed
-- Affected table
-- Record ID
-- Previous values
-- New values
-- Description
-- IP address
-- User agent
-- Timestamp
+* User who performed the action
+* Action performed
+* Affected table
+* Record ID
+* Previous values
+* New values
+* Description
+* IP address
+* User agent
+* Timestamp
 
 ## Role-Based Access
 
@@ -94,33 +94,33 @@ Logged information includes:
 
 The Principal has the highest level of access.
 
-- Manage teachers
-- Manage students
-- Manage courses
-- Manage subjects
-- Manage attendance
-- View audit logs
-- Access all departments and students
+* Manage teachers
+* Manage students
+* Manage courses
+* Manage subjects
+* Manage attendance
+* View audit logs
+* Access all departments and students
 
 ### HOD
 
 The HOD has administrative access to academic data.
 
-- View and manage teachers
-- View and manage students
-- Manage courses
-- Access students across departments
-- Access academic information
+* View and manage teachers
+* View and manage students
+* Manage courses
+* Access students across departments
+* Access academic information
 
 ### Teacher
 
 Teachers have department-level access.
 
-- View students belonging to their department
-- Modify student information where permitted
-- Manage attendance
-- View courses
-- Access relevant academic information
+* View students belonging to their department
+* Modify student information where permitted
+* Manage attendance
+* View courses
+* Access relevant academic information
 
 A teacher's department is determined through the relationship:
 
@@ -134,7 +134,7 @@ Department
 Courses
    ↓
 Students
-````
+```
 
 Therefore, a teacher assigned to the Computer Science department can access students enrolled in Computer Science courses but cannot access students from Electronics or Civil courses.
 
@@ -466,6 +466,3 @@ Potential future enhancements include:
 ## License
 
 This project is intended for educational and development purposes.
-
-```
-```

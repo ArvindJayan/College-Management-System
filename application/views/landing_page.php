@@ -12,6 +12,7 @@
 			background: linear-gradient(135deg, #346314 0%, #b0e083 100%);
 			color: white;
 			padding: 100px 0;
+			height: 100vh;
 		}
 
 		.feature-card {
@@ -47,8 +48,8 @@
 
 	<section class="hero-section text-center text-lg-start">
 		<div class="container">
-			<div class="row align-items-center">
-				<div class="col-lg-6 mb-4 mb-lg-0">
+			<div class="row pt-2 align-items-center">
+				<div class="col-lg-6 mb-4 pt-5 mb-lg-0">
 					<h1 class="display-4 fw-bold mb-3">College Management Made Simple & Efficient</h1>
 					<p class="lead mb-4">Streamline Student, Teacher and Department Management</p>
 					<div class="d-flex flex-column flex-sm-row gap-3 mb-5">

@@ -12,7 +12,7 @@
 			background: linear-gradient(135deg, #346314 0%, #b0e083 100%);
 			color: white;
 			padding: 100px 0;
-			height: 100vh;
+			height: 90vh;
 		}
 
 		.feature-card {
